@@ -1,0 +1,4 @@
+"id","name","model_id:id","group_id:id","perm_read","perm_write","perm_create","perm_unlink"
+exam_management.access_student_details,access_student_details,exam_management.model_student_details,base.group_user,1,1,1,1
+exam_management.access_parent_details,access_parent_details,exam_management.model_parent_details,base.group_user,1,1,1,1
+exam_management.access_student_subject_details,access_student_subject_details,exam_management.model_student_subject_details,base.group_user,1,1,1,1

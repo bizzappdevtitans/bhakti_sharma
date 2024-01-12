@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	<record id="view_student_detail_tree" model="ir.ui.view">
+		<field name="name">student.info.tree</field>
+		<field name="model">student.details</field>
+		<field name="arch" type="xml">
+            <tree>
+            	<field name="active" widget="boolean_toggle" nolabel="1"/>
+            	<field name="state"  widget="badge" decoration-success="state=='done'"/>
+                <field name="student_name" widget="text"/>
+                <field name="image" widget="image"/>
+                <field name="parent_field_id" widget="many2one_avatar_parent"/>
+                <field name="gender"/>
+                <field name="age"/>
+                <field name="email" widget="email"/>
+                <field name="school_name"/>
+                <field name="subjects" widget="many2many_tags"/>
+                <field name="priority" widget="priority"/>
+                <field name="marks" widget="percentpie"/>
+				<field name="percentage"  widget="percentage"/>
+                <field name="address"/>
+                <field name="feedback"/>
+				<field name="date"/>
+				<field name="datetime" widget="remaining_days"/>
+            </tree>
+        </field>
+	</record>
+
+	<record id="view_student_detail_form" model="ir.ui.view">
+		<field name="name">student.info.form</field>
+		<field name="model">student.details</field>
+		<field name="arch" type="xml">
+			<form>
+				<sheet>
+					<header>
+						<field name="state" widget="statusbar" nolabel="1" options="{'clickable':'1'}" statusbar_visible="in_progress,done"/>
+					</header>
+					<group name="group_top"><!--col="2"-->
+						<widget name="web_ribbon" title="Archived" bg_color="bg-warning"
+							attrs="{'invisible':[('active','=',True)]}"/>
+						<group name="group_left">
+							<field name="active" widget="boolean_toggle"/>
+							<field name="student_name" widget="text" required="True"/>
+               	 			<field name="school_name" widget="radio"/>
+               	 			<field name="parent_field_id"/>
+               	 			<field name="gender"/>
+               	 			<field name="address" placeholder="Add address.." widget="html"/>
+               	 			<field name="email" widget="email"/>
+               	 			 <field name="color" widget="color_picker"/>
+						</group>
+						<group name="group_right">
+							<field name="priority" widget="priority"/>
+							<field name="marks"/><!--widget="color_picker"-->
+							<field name="percentage"  widget="percentage"/>
+							<field name="date"/>
+							<field name="age"/>
+							<field name="datetime"/>
+							<field name="feedback" widget="char_emojis"/>
+							<field name="image" widget="image"/><!-- widget="image"-->
+						</group>
+					</group>
+					<notebook>
+						<page string="Subject">
+							<field name="subjects" widget="many2many_tags"/>
+						</page>
+						<page string="Progress" name="progress">
+							<field name="progress" widget="gauge" style="width:120px;height:90px;cursor:pointer;"/>
+						</page>
+					</notebook>
+				</sheet>
+			</form>
+        </field>
+	</record>
+
+	<record id="view_student_detail_search" model="ir.ui.view">
+		<field name="name">student.info.search</field>
+		<field name="model">student.details</field>
+		<field name="arch" type="xml">
+            <search>
+            	<field name="active"/>
+                <field name="student_name"/>
+                <field name="school_name"/>
+                <field name="image"/>
+                <field name="address"/>
+                <field name="feedback" />
+				<field name="date" widget="date"/>
+				<field name="datetime"/>
+				<field name="marks"/>
+				<field name="percentage"  widget="percentage"/>
+				<filter string="Non-Active Student" name="active" domain="[('active', '=', False)]"/>
+				<filter string="100 percentage" name="percentage" domain="[('percentage', '=',100.00)]"/>
+				<group expand="0" string="Group By">
+                    <filter string="Gender" name="gender" context="{'group_by': 'gender'}"/>
+                </group>
+				<group expand="0" string="Group By">
+                    <filter string="Marks" name="marks" context="{'group_by': 'marks'}"/>
+                </group>
+                <group expand="0" string="Group By">
+                    <filter string="Date" name="date" context="{'group_by': 'date'}"/>
+                </group>
+                <group expand="0" string="Group By">
+                    <filter string="Subjects" name="subjects" context="{'group_by': 'subjects'}"/>
+                </group>
+            </search>
+        </field>
+	</record>
+
+
+	<record id="view_student_detail_kanban" model="ir.ui.view">
+		<field name="name">student.info.kanban</field>
+		<field name="model">student.details</field>
+		<field name="arch" type="xml">
+            <kanban quick_create="true">
+				<templates>
+					<t t-name="kanban-box">
+						<!--<div class="o_kanban_header">
+							<div class="o_kanban_header_title">
+								<strong>CURRENT</strong>
+							</div>
+						</div>-->
+						<div class="oe_kanban_global_click">
+								<div class="o_dropdown_kanban dropdown">
+									<!-- Top-right drop down menu ... -->
+									<a class="dropdown-toggle btn"
+									role="button" data-toggle="dropdown"
+									title="Dropdown menu" href="#">
+										<span class="fa fa-ellipsis-v" />
+									</a>
+									<div class="dropdown-menu" role="menu">
+										<!-- Edit menu option -->
+										<t t-if="widget.editable">
+											<a role="menuitem" type="edit"
+											class="dropdown-item">Edit</a>
+										</t>
+										<!-- Delete menu option -->
+										<t t-if="widget.deletable">
+											<a role="menuitem" type="delete"
+											class="dropdown-item">Delete</a>
+										</t>
+
+										<!--<ul class="oe_kanban_colorpicker" data-field="color" />-->
+									</div>
+								</div>
+								<div class="oe_kanban_content">
+									<div class="o_kanban_record_title">
+										<!-- Title area ... -->
+										<field name="progress" widget="progressbar"/>
+										<strong><field name="student_name" /></strong>
+									</div>
+									<div class="o_kanban_record_body">
+										<!-- Other content area ... -->
+										<div>
+							                <field name="school_name"/>
+										</div>
+
+										<div>
+							                <field name="gender"/>
+										</div>
+										<!-- <div>
+											<field name="subjects" widget="many2many_kanban"/>
+										</div> -->
+									</div>
+									<div class="o_kanban_record_bottom">
+										<div class="oe_kanban_bottom_left">
+											<!-- Left side footer... -->
+											<field name="percentage"  widget="percentage"/>
+										</div>
+										<div class="oe_kanban_bottom_right">
+											<!-- Right side footer... -->
+											<field name="datetime" widget="date"/>
+										</div>
+									</div> <!-- o_kanban_record_bottom -->
+									<div class="oe_clear"/>
+								</div> <!-- oe_kanban_content -->
+						</div> <!-- oe_kanban_global_click -->
+						<!--<div>
+							<field name="student_name" />
+						/div>-->
+					</t>
+				</templates>
+			</kanban>
+        </field>
+	</record>
+
+	<record id="view_calendar" model="ir.ui.view">
+		<field name="model">student.details</field>
+		<field name="arch" type="xml">
+			<calendar date_start="date" mode="month">
+				<field name="student_name" />
+			</calendar>
+		</field>
+	</record>
+
+	<record id="view_student_detail_graph" model="ir.ui.view">
+		<field name="name">student.info.graph</field>
+		<field name="model">student.details</field>
+		<field name="arch" type="xml">
+            <graph>
+            	<field name="marks"/>
+            </graph>
+        </field>
+	</record>
+
+	<record id="view_pivot" model="ir.ui.view">
+		<field name="model">student.details</field>
+		<field name="arch" type="xml">
+		<pivot disable_linking="True" sample="1">
+			<field name="date" interval="month" type="row" />
+			<field name="student_name" string="Student Name" type="col"/>
+			<field name="marks" type="measure" />
+		</pivot>
+		</field>
+	</record>
+
+	<record id="action_student_details_menu" model="ir.actions.act_window">
+		<field name="name">student.details.menu</field>
+		<field name="res_model">student.details</field>
+		<field name="view_mode">kanban,tree,form,calendar,pivot,search,graph</field>
+	</record>
+
+
+
+	<!--PARENT MODULE-->
+
+	 <record id="action_parent_details_menu" model="ir.actions.act_window">
+        <field name="name">parent.details.menu</field>
+        <field name="res_model">parent.details</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="view_parent_detail_tree" model="ir.ui.view">
+		<field name="name">parent.info.tree</field>
+		<field name="model">parent.details</field>
+		<field name="arch" type="xml">
+            <tree>
+            	<field name="sequence" widget="handle"/>
+            	<field name="mother_name" decoration-it="1"/>
+            	<field name="father_name" decoration-bf="1"/>
+            </tree>
+        </field>
+	</record>
+
+	<record id="view_parent_detail_form" model="ir.ui.view">
+		<field name="name">parent.info.form</field>
+		<field name="model">parent.details</field>
+		<field name="arch" type="xml">
+			<form>
+				<sheet>
+					<group>
+							<field name="mother_name"/>
+							<field name="father_name"/>
+							<field name="image" widget="image"/>
+					</group>
+							<notebook>
+								<page string="Add Student Data">
+									<field name="student_field_id">
+										<tree editable="bottom">
+											<field name="active" widget="boolean_toggle"/>
+							                <field name="student_name"/>
+							                <field name="school_name"/>
+							                <field name="image"/>
+							                <field name="address"/>
+							                <field name="feedback"/>
+											<field name="date"/>
+											<field name="datetime"/>
+											<field name="marks"/>
+											<field name="percentage"  widget="percentage"/>
+										</tree>
+									</field>
+								</page>
+							</notebook>
+				</sheet>
+			</form>
+        </field>
+	</record>
+
+	<!--SUBJECT-->
+
+	 <record id="action_subject_details_menu" model="ir.actions.act_window">
+        <field name="name">subject.details.menu</field>
+        <field name="res_model">student.subject.details</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+
+
+    <record id="view_subject_detail_tree" model="ir.ui.view">
+		<field name="name">subject.info.tree</field>
+		<field name="model">student.subject.details</field>
+		<field name="arch" type="xml">
+            <tree>
+            	<field name="subject_name"/>
+            	<field name="students" widget="many2many_tags"/>
+            </tree>
+        </field>
+	</record>
+
+	<record id="view_subject_detail_form" model="ir.ui.view">
+		<field name="name">subject.info.form</field>
+		<field name="model">student.subject.details</field>
+		<field name="arch" type="xml">
+			<form>
+				<sheet>
+					<group>
+						<field name="subject_name" widget="selection"/>
+					</group>
+					<notebook>
+						<page string="Students">
+							<field name="students" widget="many2many_checkboxes"/>
+						</page>
+					</notebook>
+				</sheet>
+			</form>
+        </field>
+	</record>
+
+
+
+</odoo>
