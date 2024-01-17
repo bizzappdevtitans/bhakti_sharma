@@ -6,7 +6,7 @@
 		<field name="model">student.details</field>
 		<field name="arch" type="xml">
             <tree>
-            	<field name="active" widget="boolean_toggle" nolabel="1"/>
+            	<field name="active" widget="boolean_toggle"/>
             	<field name="state"  widget="badge" decoration-success="state=='done'"/>
                 <field name="student_name" widget="text"/>
                 <field name="image" widget="image"/>
@@ -23,6 +23,7 @@
                 <field name="feedback"/>
 				<field name="date"/>
 				<field name="datetime" widget="remaining_days"/>
+
             </tree>
         </field>
 	</record>
@@ -33,10 +34,24 @@
 		<field name="arch" type="xml">
 			<form>
 				<sheet>
+					<!--Smart button(Active students count) -->
+					<div class="oe_button_box">
+           				 <button class=" oe_stat_button" name="button_students" type="object" icon="fa-book">
+
+           				 	<span>
+           				 		<field name="subject_count" class="o_stat_value"/>
+                            	<span class="o_stat_text">Subject_count</span>
+           				 	</span>
+            			 </button>
+            		</div>
 					<header>
-						<field name="state" widget="statusbar" nolabel="1" options="{'clickable':'1'}" statusbar_visible="in_progress,done"/>
+						<!--button with object type-->
+						<button name="button_done" string="Done" type="object" class="oe_highlight" help="Move state from draft and in_progress to Done state"/>
+
+						<field name="state" widget="statusbar" nolabel="1" options="{'clickable':'1'}" statusbar_visible="draft,in_progress,done"/>
 					</header>
 					<group name="group_top"><!--col="2"-->
+						<!--action archived-->
 						<widget name="web_ribbon" title="Archived" bg_color="bg-warning"
 							attrs="{'invisible':[('active','=',True)]}"/>
 						<group name="group_left">
@@ -47,17 +62,19 @@
                	 			<field name="gender"/>
                	 			<field name="address" placeholder="Add address.." widget="html"/>
                	 			<field name="email" widget="email"/>
-               	 			 <field name="color" widget="color_picker"/>
+               	 			<field name="color" widget="color_picker"/>
+               	 			<!--button with action type-->
+               	 			<button name="%(exam_management.action_subject_details_menu)d" string="View Subjects" type="action" class="oe_highlight"/>
 						</group>
 						<group name="group_right">
 							<field name="priority" widget="priority"/>
-							<field name="marks"/><!--widget="color_picker"-->
+							<field name="marks"/>
 							<field name="percentage"  widget="percentage"/>
 							<field name="date"/>
 							<field name="age"/>
 							<field name="datetime"/>
 							<field name="feedback" widget="char_emojis"/>
-							<field name="image" widget="image"/><!-- widget="image"-->
+							<field name="image" widget="image"/>
 						</group>
 					</group>
 					<notebook>
@@ -89,7 +106,6 @@
 				<field name="marks"/>
 				<field name="percentage"  widget="percentage"/>
 				<filter string="Non-Active Student" name="active" domain="[('active', '=', False)]"/>
-				<filter string="100 percentage" name="percentage" domain="[('percentage', '=',100.00)]"/>
 				<group expand="0" string="Group By">
                     <filter string="Gender" name="gender" context="{'group_by': 'gender'}"/>
                 </group>
@@ -138,8 +154,6 @@
 											<a role="menuitem" type="delete"
 											class="dropdown-item">Delete</a>
 										</t>
-
-										<!--<ul class="oe_kanban_colorpicker" data-field="color" />-->
 									</div>
 								</div>
 								<div class="oe_kanban_content">
@@ -157,9 +171,6 @@
 										<div>
 							                <field name="gender"/>
 										</div>
-										<!-- <div>
-											<field name="subjects" widget="many2many_kanban"/>
-										</div> -->
 									</div>
 									<div class="o_kanban_record_bottom">
 										<div class="oe_kanban_bottom_left">
@@ -174,9 +185,6 @@
 									<div class="oe_clear"/>
 								</div> <!-- oe_kanban_content -->
 						</div> <!-- oe_kanban_global_click -->
-						<!--<div>
-							<field name="student_name" />
-						/div>-->
 					</t>
 				</templates>
 			</kanban>
@@ -247,6 +255,16 @@
 		<field name="arch" type="xml">
 			<form>
 				<sheet>
+					<!--Smart button(child count) -->
+					<div class="oe_button_box">
+           				 <button class=" oe_stat_button" name="button_child" type="object" icon="fa-users">
+
+           				 	<span>
+           				 		<field name="child_count" class="o_stat_value"/>
+                            	<span class="o_stat_text">Students</span>
+           				 	</span>
+            			 </button>
+            		</div>
 					<group>
 							<field name="mother_name"/>
 							<field name="father_name"/>
@@ -274,6 +292,7 @@
 			</form>
         </field>
 	</record>
+
 
 	<!--SUBJECT-->
 

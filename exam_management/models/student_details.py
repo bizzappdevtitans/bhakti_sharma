@@ -45,14 +45,17 @@ class StudentDetails(models.Model):
     color = fields.Integer("Color")
     website_url = fields.Char(string="website Url", help="add website url")
     state = fields.Selection(
-        [("in_progress", "In Progress"), ("done", "Done")],
+        [("draft", "Draft"), ("in_progress", "In Progress"), ("done", "Done")],
         string="State",
         default="in_progress",
         required=True,
     )
     progress = fields.Integer("Progress", compute="_compute_progress")
     email = fields.Char(string="Email")
+
     subjects = fields.Many2many("student.subject.details", string="Subject")
+
+    subject_count = fields.Integer(compute="_compute_subject")
 
     @api.depends("date")
     def _compute_age(self):
@@ -76,8 +79,28 @@ class StudentDetails(models.Model):
                 record.progress = 100
             elif record.state == "in_progress":
                 record.progress = 50
+            elif record.state == "draft":
+                record.progress == 10
             else:
-                record.progress = 0
+                record.progress == 0
+
+    def button_done(self):
+        for record in self:
+            record.state = "done"
+
+    def _compute_subject(self):
+        for record in self:
+            total_student = len(self.subjects)
+            self.subject_count = total_student
+
+    def button_students(self):
+        return {
+            "name": ("subjects"),
+            "view_mode": "tree,form",
+            "res_model": "student.subject.details",
+            "type": "ir.actions.act_window",
+            "domain": [("students", "=", self.student_name)],
+        }
 
 
 class StudentSubjectDetails(models.Model):
