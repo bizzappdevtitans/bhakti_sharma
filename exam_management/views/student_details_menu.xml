@@ -11,8 +11,23 @@
 		id="student_details_menu"
 		name="Student"
 		parent="exam_menu"
-		action="action_student_details_menu"
 		/>
+
+	<menuitem
+		id="sub_student_details_menu"
+		name="Student Details"
+		parent="student_details_menu"
+		action="action_student_details_menu"
+		sequence="1"
+		/>
+
+	<menuitem
+		id="sub_studentwizard"
+		name="Student Wizard"
+		parent="student_details_menu"
+		action="action_student_wizard"
+		sequence="2"/>
+
 
 	<menuitem
 		id="subject_details_menu"
@@ -25,8 +40,14 @@
 		id="parent_details_menu"
 		name="Parent"
 		parent="exam_menu"
-		action="action_parent_details_menu"/>
+		/>
 
+	<menuitem
+		id="sub_parent_details_menu"
+		name="Parent Details"
+		parent="parent_details_menu"
+		action="action_parent_details_menu"
+		sequence="1"/>
 
 
 </odoo>

@@ -5,6 +5,7 @@ from odoo.exceptions import ValidationError
 
 class StudentDetails(models.Model):
     _name = "student.details"
+    _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = "Student Information"
     _rec_name = "student_name"
 
@@ -57,6 +58,21 @@ class StudentDetails(models.Model):
 
     subject_count = fields.Integer(compute="_compute_subject")
 
+    _sql_constraints = [
+        (
+            "unique_name",
+            "unique(student_name,parent_field_id)",
+            "Student name must be unique",
+        )
+    ]
+
+    """
+        (
+            "age_check",
+            "check(age > 0)",
+            "Age must be greater than 0",
+        )"""
+
     @api.depends("date")
     def _compute_age(self):
         for record in self:
@@ -71,6 +87,12 @@ class StudentDetails(models.Model):
         for record in self:
             if len(record.student_name) < 4:
                 raise ValidationError("STUDENT NAME MUST BE MORE THAN 4 CHARACTER")
+
+    @api.constrains("date")
+    def _check_date(self):
+        for record in self:
+            if record.date and record.date > fields.Date.today():
+                raise ValidationError("Entered date is not valid")
 
     @api.depends("state")
     def _compute_progress(self):

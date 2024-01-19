@@ -8,14 +8,14 @@
             <tree>
             	<field name="active" widget="boolean_toggle"/>
             	<field name="state"  widget="badge" decoration-success="state=='done'"/>
-                <field name="student_name" widget="text"/>
+                <field name="student_name" widget="text" optional="show"/>
                 <field name="image" widget="image"/>
                 <field name="parent_field_id" widget="many2one_avatar_parent"/>
                 <field name="gender"/>
                 <field name="age"/>
                 <field name="email" widget="email"/>
                 <field name="school_name"/>
-                <field name="subjects" widget="many2many_tags"/>
+                <field name="subjects" widget="many2many_tags" />
                 <field name="priority" widget="priority"/>
                 <field name="marks" widget="percentpie"/>
 				<field name="percentage"  widget="percentage"/>
@@ -23,7 +23,6 @@
                 <field name="feedback"/>
 				<field name="date"/>
 				<field name="datetime" widget="remaining_days"/>
-
             </tree>
         </field>
 	</record>
@@ -46,7 +45,7 @@
             		</div>
 					<header>
 						<!--button with object type-->
-						<button name="button_done" string="Done" type="object" class="oe_highlight" help="Move state from draft and in_progress to Done state"/>
+						<button name="button_done" string="Done" type="object" class="oe_highlight" confirm="Are you sure to move state to final done?" help="Move state from draft and in_progress to Done state"/>
 
 						<field name="state" widget="statusbar" nolabel="1" options="{'clickable':'1'}" statusbar_visible="draft,in_progress,done"/>
 					</header>
@@ -58,13 +57,13 @@
 							<field name="active" widget="boolean_toggle"/>
 							<field name="student_name" widget="text" required="True"/>
                	 			<field name="school_name" widget="radio"/>
-               	 			<field name="parent_field_id"/>
-               	 			<field name="gender"/>
-               	 			<field name="address" placeholder="Add address.." widget="html"/>
+               	 			<field name="parent_field_id" options="{'no_create':True}"/>
+               	 			<field name="gender" />
+               	 			<field name="address" placeholder="Add address.." widget="html" options="{'resizable':true}"/>
                	 			<field name="email" widget="email"/>
                	 			<field name="color" widget="color_picker"/>
                	 			<!--button with action type-->
-               	 			<button name="%(exam_management.action_subject_details_menu)d" string="View Subjects" type="action" class="oe_highlight"/>
+               	 			<button name="%(exam_management.action_subject_details_menu)d" string="View Subjects" confirm="Are you sure to open the subject?" type="action" class="oe_highlight" />
 						</group>
 						<group name="group_right">
 							<field name="priority" widget="priority"/>
@@ -79,13 +78,18 @@
 					</group>
 					<notebook>
 						<page string="Subject">
-							<field name="subjects" widget="many2many_tags"/>
+							<field name="subjects" widget="many2many_tags" />
 						</page>
 						<page string="Progress" name="progress">
 							<field name="progress" widget="gauge" style="width:120px;height:90px;cursor:pointer;"/>
 						</page>
 					</notebook>
 				</sheet>
+				<div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
 			</form>
         </field>
 	</record>
@@ -127,7 +131,7 @@
 		<field name="name">student.info.kanban</field>
 		<field name="model">student.details</field>
 		<field name="arch" type="xml">
-            <kanban quick_create="true">
+            <kanban quick_create="true" sample="1">
 				<templates>
 					<t t-name="kanban-box">
 						<!--<div class="o_kanban_header">
@@ -273,7 +277,7 @@
 							<notebook>
 								<page string="Add Student Data">
 									<field name="student_field_id">
-										<tree editable="bottom">
+										<tree>
 											<field name="active" widget="boolean_toggle"/>
 							                <field name="student_name"/>
 							                <field name="school_name"/>
@@ -293,7 +297,6 @@
         </field>
 	</record>
 
-
 	<!--SUBJECT-->
 
 	 <record id="action_subject_details_menu" model="ir.actions.act_window">
@@ -311,7 +314,7 @@
 		<field name="arch" type="xml">
             <tree>
             	<field name="subject_name"/>
-            	<field name="students" widget="many2many_tags"/>
+            	<field name="students" widget="many2many_tags" options="{'color_field': 'color'}"/>
             </tree>
         </field>
 	</record>
