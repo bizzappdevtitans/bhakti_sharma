@@ -32,7 +32,7 @@ class StudentDetails(models.Model):
 
     # numeric fileds
     marks = fields.Integer(string="Marks", default=0)
-    percentage = fields.Float("Percentage", (3, 2))
+    percentage = fields.Float("Percentage", (3, 2), compute="_compute_percentage")
 
     image = fields.Binary("Image")
     active = fields.Boolean(string="Student active", default=True)
@@ -87,6 +87,17 @@ class StudentDetails(models.Model):
         for record in self:
             if len(record.student_name) < 4:
                 raise ValidationError("STUDENT NAME MUST BE MORE THAN 4 CHARACTER")
+
+    @api.constrains("marks")
+    def validate_marks(self):
+        for record in self:
+            if record.marks < 0 or record.marks > 200:
+                raise ValidationError("PLEASE ENTER MARKS UNDER 200!!")
+
+    @api.depends("marks")
+    def _compute_percentage(self):
+        for record in self:
+            record.percentage = (record.marks / 200) * 100
 
     @api.constrains("date")
     def _check_date(self):
