@@ -1,0 +1,22 @@
+{
+    "name": "School App",
+    "summary": """Use for School Management""",
+    "author": "bizzappdev",
+    "website": "https://www.bizzappdev.com",
+    "category": "Uncategorized",
+    "version": "15.0.1.0.0",
+    "depends": ["base"],
+    "data": [
+        "security/ir.model.access.csv",
+        "views/student_views.xml",
+        "views/class_views.xml",
+        "views/teacher_views.xml",
+        "views/facility_views.xml",
+        "views/attendance_views.xml",
+        "views/subject_views.xml",
+        "views/school_menu.xml",
+    ],
+    "application": True,
+    "installation": True,
+    "license": "LGPL-3",
+}

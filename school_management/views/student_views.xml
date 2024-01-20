@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_student_details_menu" model="ir.actions.act_window">
+        <field name="name">student.details.menu</field>
+        <field name="res_model">student.details</field>
+        <field name="view_mode">tree,form,search</field>
+    </record>
+
+    <record id="view_student_details_form" model="ir.ui.view">
+        <field name="name">student.details.form</field>
+        <field name="model">student.details</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <h2>Student Details</h2>
+                    <group name="group_top">
+                        <group name="group_left">
+                            <field name="student_name" attrs="{'required':1}"/>
+                            <field name="father_name"/>
+                            <field name="mother_name"/>
+                            <field name="gender"/>
+                            <field name="dateOfBirth"/>
+                            <field name="age"/>
+                            <field name="phone_number" attrs="{'required':1}"/>
+                        </group>
+                        <group name="group_right">
+                            <field name="rollNumber" attrs="{'required':1}"/>
+                            <field name="student_class"/>
+                            <field name="address" widget="html" options="{'resizable':true}"/>
+                            <field name="email"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_student_details_tree" model="ir.ui.view">
+        <field name="name">student.details.tree</field>
+        <field name="model">student.details</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="rollNumber"  decoration-bf="1"  decoration-it="1"/>
+                <field name="student_name" />
+                <field name="father_name"/>
+                <field name="mother_name"/>
+                <field name="gender"/>
+                <field name="dateOfBirth" widget="date"/>
+                <field name="age"/>
+                <field name="student_class"/>
+                <field name="address" />
+                <field name="email"  widget="email"/>
+                <field name="phone_number" widget="phone"/>
+            </tree>
+        </field>
+    </record>
+
+
+     <record id="view_student_details_search" model="ir.ui.view">
+        <field name="name">student.details.search</field>
+        <field name="model">student.details</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="rollNumber"  decoration-bf="1"  decoration-it="1"/>
+                <field name="student_name" />
+                <field name="father_name"/>
+                <field name="mother_name"/>
+                <field name="gender"/>
+                <field name="dateOfBirth"/>
+                <field name="age"/>
+                <field name="address" />
+                <field name="email"  widget="email"/>
+                <field name="phone_number" widget="phone_number"/>
+
+                <filter string="Female Students" name="gender" domain="[('gender', '=', 'female')]"/>
+                <filter string="Male Students" name="gender" domain="[('gender', '=', 'male')]"/>
+
+                <group expand="0" string="Group By">
+                    <filter string="Gender" name="gender" context="{'group_by': 'gender'}"/>
+                </group>
+                <group expand="0" string="Group By">
+                    <filter string="Date" name="dateOfBirth" context="{'group_by': 'dateOfBirth'}"/>
+                </group>
+                <group expand="0" string="Group By">
+                    <filter string="Class" name="student_class" context="{'group_by': 'student_class'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+</odoo>
+

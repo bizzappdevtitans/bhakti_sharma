@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_class_details_menu" model="ir.actions.act_window">
+        <field name="name">class.details.menu</field>
+        <field name="res_model">class.details</field>
+        <field name="view_mode">tree,form,search</field>
+    </record>
+
+    <record id="view_class_details_form" model="ir.ui.view">
+            <field name="name">class.details.form</field>
+            <field name="model">class.details</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <h2>Class Details</h2>
+                        <group name="group_top">
+                            <group name="group_left">
+                                <field name="class_name"/>
+                                <field name="class_teacher"/>
+                                <field name="facilities" widget="many2many_tags"/>
+                            </group>
+                            <group name="group_right">
+                                <field name="capacity"/>
+                                <field name="room_number"/>
+                            </group>
+                        </group>
+                        <notebook>
+                                <page string="Add Student Data">
+                                    <field name="students">
+                                        <tree>
+                                            <field name="student_name"/>
+                                            <field name="rollNumber"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                                <page string="Add Subject Data">
+                                    <field name="subject">
+                                        <tree>
+                                            <field name="subject_name"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                            </notebook>
+                    </sheet>
+                </form>
+            </field>
+    </record>
+
+     <record id="view_class_details_tree" model="ir.ui.view">
+        <field name="name">class.details.tree</field>
+        <field name="model">class.details</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="class_name"/>
+                <field name="class_teacher"/>
+                <field name="facilities"  widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="capacity"/>
+                <field name="students"/>
+                <field name="subject"/>
+                <field name="room_number"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_class_details_search" model="ir.ui.view">
+        <field name="name">class.details.search</field>
+        <field name="model">class.details</field>
+        <field name="arch" type="xml">
+            <search>
+
+                <field name="class_name"/>
+                <field name="class_teacher"/>
+                <field name="facilities"/>
+                <field name="capacity"/>
+                <field name="students"/>
+                <field name="room_number"/>
+
+                <filter string="Library facilities" name="facilities" domain="[('facilities', '=', 'library')]"/>
+
+                <group expand="0" string="Group By">
+                    <filter string="Class Wise" name="class_name" context="{'group_by': 'class_name'}"/>
+                </group>
+
+                <group expand="0" string="Group By">
+                    <filter string="Facility Wise" name="facilities" context="{'group_by': 'facilities'}"/>
+                </group>
+
+            </search>
+        </field>
+    </record>
+
+</odoo>

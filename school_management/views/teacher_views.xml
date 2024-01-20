@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_teacher_details_menu" model="ir.actions.act_window">
+        <field name="name">teacher.details.menu</field>
+        <field name="res_model">teacher.details</field>
+        <field name="view_mode">tree,form,search</field>
+    </record>
+
+    <record id="view_teacher_details_form" model="ir.ui.view">
+        <field name="name">teacher.details.form</field>
+        <field name="model">teacher.details</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <h2>Teacher Details</h2>
+                    <group name="group_top">
+                        <group name="group_left">
+                            <field name="teacher_name"/>
+                            <field name="gender"/>
+                            <field name="dateOfBirth"/>
+                            <field name="age"/>
+                            <field name="phone_number"  attrs="{'required':1}"/>
+                        </group>
+                        <group name="group_right">
+                            <field name="address" widget="html" options="{'resizable':true}" />
+                            <field name="email"/>
+                        </group>
+                    </group>
+                         <notebook>
+                                <page string="Add Class Data">
+                                    <field name="assign_class">
+                                        <tree>
+                                            <field name="class_name"/>
+                                            <field name="room_number"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                            </notebook>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_teacher_details_tree" model="ir.ui.view">
+        <field name="name">teacher.details.tree</field>
+        <field name="model">teacher.details</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="teacher_name"/>
+                <field name="gender"/>
+                <field name="dateOfBirth" widget="date"/>
+                <field name="age"/>
+                <field name="address" />
+                <field name="email"  widget="email"/>
+                <field name="phone_number" widget="phone"/>
+                <field name="assign_class"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_teacher_details_search" model="ir.ui.view">
+        <field name="name">teacher.details.search</field>
+        <field name="model">teacher.details</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="teacher_name"/>
+                <field name="gender"/>
+                <field name="dateOfBirth" />
+                <field name="age"/>
+                <field name="address" />
+                <field name="email"/>
+                <field name="phone_number" />
+                <field name="assign_class"/>
+
+                <filter string="Female Teacher" name="gender" domain="[('gender', '=', 'female')]"/>
+                <filter string="Male Teacher" name="gender" domain="[('gender', '=', 'male')]"/>
+
+                <group expand="0" string="Group By">
+                    <filter string="Gender" name="gender" context="{'group_by': 'gender'}"/>
+                </group>
+                <group expand="0" string="Group By">
+                    <filter string="Date" name="dateOfBirth" context="{'group_by': 'dateOfBirth'}"/>
+                </group>
+
+            </search>
+        </field>
+    </record>
+
+</odoo>

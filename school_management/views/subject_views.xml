@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_subject_details_menu" model="ir.actions.act_window">
+        <field name="name">subject.details.menu</field>
+        <field name="res_model">subject.details</field>
+        <field name="view_mode">tree,form,search</field>
+    </record>
+
+</odoo>
