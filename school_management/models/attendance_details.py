@@ -1,6 +1,5 @@
 from odoo import models, fields, api
-
-# from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError
 
 
 class AttendanceDetails(models.Model):
@@ -16,3 +15,23 @@ class AttendanceDetails(models.Model):
     startTime = fields.Datetime("Start Time")
     endTime = fields.Datetime("End Time")
     notes = fields.Html("Notes")
+    class_name = fields.Many2one("class.details", "Class")
+    state = fields.Selection(
+        [("draft", "Draft"), ("in_progress", "In Progress"), ("done", "Done")],
+        string="State",
+        default="in_progress",
+        required=True,
+    )
+
+    @api.constrains("startTime")
+    def _validate_startTime(self):
+        for record in self:
+            if record.startTime > record.endTime:
+                raise ValidationError("Please check start time and end time")
+
+    @api.onchange("class_name")
+    def _compute_student(self):
+        for record in self:
+            record.student = record.class_name.students.filtered(
+                lambda name: name.student_class == record.class_name
+            )

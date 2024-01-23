@@ -13,7 +13,18 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
-                    <h2>Student Details</h2>
+                    <!-- Smart button(Student Attendance)  -->
+                    <div class="oe_button_box">
+                    <button class=" oe_stat_button" name="attendance_button" type="object" icon="fa-list-alt">
+                    <span>
+                        <field name="attendance_count" class="o_stat_value"/>
+                        <span class="o_stat_text">Attendance</span>
+                    </span>
+                    </button>
+                    </div>
+                    <div class="oe_title">
+                            <h2>Student Details</h2>
+                    </div>
                     <group name="group_top">
                         <group name="group_left">
                             <field name="student_name" attrs="{'required':1}"/>
@@ -26,7 +37,7 @@
                         </group>
                         <group name="group_right">
                             <field name="rollNumber" attrs="{'required':1}"/>
-                            <field name="student_class"/>
+                            <field name="student_class" attrs="{'required':1}" placeholder="ex.: 10th-A"/>
                             <field name="address" widget="html" options="{'resizable':true}"/>
                             <field name="email"/>
                         </group>

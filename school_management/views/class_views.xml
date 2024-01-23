@@ -13,7 +13,29 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet>
-                        <h2>Class Details</h2>
+                        <div class="oe_button_box">
+                        <button class=" oe_stat_button" name="attendance_button" type="object" icon="fa-list-alt">
+                        <span>
+                            <field name="attendance_count" class="o_stat_value"/>
+                            <span class="o_stat_text">Attendance</span>
+                        </span>
+                        </button>
+                        <button class=" oe_stat_button" name="student_button" type="object" icon="fa-users">
+                        <span>
+                            <field name="student_count" class="o_stat_value"/>
+                            <span class="o_stat_text">Total students</span>
+                        </span>
+                        </button>
+                         <button class=" oe_stat_button" name="subject_button" type="object" icon="fa-book">
+                        <span>
+                            <field name="subject_count" class="o_stat_value"/>
+                            <span class="o_stat_text">Total subjects</span>
+                        </span>
+                        </button>
+                        </div>
+                        <div class="oe_title">
+                            <h2>Class Details</h2>
+                        </div>
                         <group name="group_top">
                             <group name="group_left">
                                 <field name="class_name"/>
@@ -41,6 +63,20 @@
                                         </tree>
                                     </field>
                                 </page>
+                                 <page string="Add Attendance Data">
+                                    <field name="attendance">
+                                        <tree>
+                                            <field name="sheet_name"/>
+                                            <field name="attendance_date"/>
+                                            <field name="status"/>
+                                            <field name="reason"/>
+                                            <field name="student"/>
+                                            <field name="startTime"/>
+                                            <field name="endTime"/>
+                                            <field name="notes"/>
+                                        </tree>
+                                    </field>
+                                </page>
                             </notebook>
                     </sheet>
                 </form>
@@ -56,8 +92,6 @@
                 <field name="class_teacher"/>
                 <field name="facilities"  widget="many2many_tags" options="{'color_field': 'color'}"/>
                 <field name="capacity"/>
-                <field name="students"/>
-                <field name="subject"/>
                 <field name="room_number"/>
             </tree>
         </field>
@@ -68,7 +102,6 @@
         <field name="model">class.details</field>
         <field name="arch" type="xml">
             <search>
-
                 <field name="class_name"/>
                 <field name="class_teacher"/>
                 <field name="facilities"/>
@@ -79,13 +112,12 @@
                 <filter string="Library facilities" name="facilities" domain="[('facilities', '=', 'library')]"/>
 
                 <group expand="0" string="Group By">
-                    <filter string="Class Wise" name="class_name" context="{'group_by': 'class_name'}"/>
+                    <filter string="Class Name" name="class_name" context="{'group_by': 'class_name'}"/>
                 </group>
 
                 <group expand="0" string="Group By">
-                    <filter string="Facility Wise" name="facilities" context="{'group_by': 'facilities'}"/>
+                    <filter string="Facility name" name="facilities" context="{'group_by': 'facilities'}"/>
                 </group>
-
             </search>
         </field>
     </record>

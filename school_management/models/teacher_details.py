@@ -16,6 +16,23 @@ class TeacherDetails(models.Model):
     email = fields.Text(string="Email", help="enter email")
     address = fields.Html(string="Address", help="Enter address")
     assign_class = fields.One2many("class.details", "class_teacher", "Class Assign")
+    subject_data = fields.One2many(
+        "subject.details", "teacher_name", "Subjects Details"
+    )
+    subject_count = fields.Integer(compute="_compute_subject_count")
+
+    def _compute_subject_count(self):
+        for record in self:
+            record.subject_count = len(record.subject_data)
+
+    def subject_button(self):
+        return {
+            "name": "Total subjects",
+            "view_mode": "tree,form",
+            "res_model": "subject.details",
+            "type": "ir.actions.act_window",
+            "domain": [("teacher_name", "=", self.teacher_name)],
+        }
 
     @api.depends("dateOfBirth")
     def _compute_age(self):

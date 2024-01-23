@@ -41,4 +41,6 @@
         name="Subject"
         parent="school_menu"
         action="action_subject_details_menu"/>
+
+
 </odoo>

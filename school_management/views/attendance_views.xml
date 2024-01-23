@@ -12,23 +12,39 @@
             <field name="model">attendance.details</field>
             <field name="arch" type="xml">
                 <form>
+                    <header>
+                        <field name="state" widget="statusbar" nolabel="1" options="{'clickable':'1'}" statusbar_visible="draft,in_progress,done"/>
+                    </header>
                     <sheet>
-                        <h2>Attendance Details</h2>
+                        <div class="oe_title">
+                            <h2>Attendance Details</h2>
+                        </div>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-warning" attrs="{'invisible':[('state','=','in_progress')],'invisible':[('state', 'in', ['in_progress', 'done'])]}"/>
                         <group name="group_top">
                             <group name="group_left">
                                 <field name="sheet_name"/>
                                 <field name="attendance_date"/>
                                 <field name="status" widget="radio"/>
                                 <field name="reason"/>
-                                <field name="student" widget="many2many_tags"/>
+                                <!-- <field name="student" widget="many2many_tags"/> -->
                             </group>
                             <group name="group_right">
+                                <field name="class_name"/>
                                 <field name="startTime"/>
                                 <field name="endTime"/>
                                 <field name="notes"/>
                             </group>
                         </group>
-
+                        <notebook>
+                             <page string="Add Students">
+                                <field name="student" >
+                                    <tree>
+                                        <field name="rollNumber"/>
+                                        <field name="student_name"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
@@ -38,14 +54,15 @@
             <field name="name">attendance.details.tree</field>
             <field name="model">attendance.details</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree decoration-danger="status=='absent'" decoration-success="status=='present'">
                     <field name="sheet_name"/>
                     <field name="attendance_date"/>
+                    <field name="class_name"/>
                     <field name="status"/>
-                    <field name="reason"/>
                     <field name="student"/>
                     <field name="startTime"/>
                     <field name="endTime"/>
+                    <field name="reason"/>
                     <field name="notes"/>
                 </tree>
             </field>
@@ -58,6 +75,7 @@
             <search>
                 <field name="sheet_name"/>
                 <field name="attendance_date"/>
+                <field name="class_name"/>
                 <field name="status"/>
                 <field name="reason"/>
                 <field name="student"/>
@@ -67,6 +85,9 @@
 
                 <filter string="Present" name="status" domain="[('status', '=', 'present')]"/>
                 <filter string="Absent" name="status" domain="[('status', '=', 'absent')]"/>
+                <filter string="In Progress data" name="state" domain="[('state', '=', 'in_progress')]"/>
+                <filter string="Draft data" name="state" domain="[('state', '=', 'draft')]"/>
+                <filter string="Sheet Filled" name="state" domain="[('state', '=', 'done')]"/>
 
                 <group expand="0" string="Group By">
                     <filter string="Status Wise" name="status" context="{'group_by': 'status'}"/>
@@ -74,6 +95,18 @@
 
                 <group expand="0" string="Group By">
                     <filter string="Attendance Date" name="attendance_date" context="{'group_by': 'attendance_date'}"/>
+                </group>
+
+                <group expand="0" string="Group By">
+                    <filter string="State" name="state" context="{'group_by': 'state'}"/>
+                </group>
+
+                <group expand="0" string="Group By">
+                    <filter string="Date" name="attendance_date" context="{'group_by':'attendance_date'}"/>
+                </group>
+
+                <group expand="0" string="Group By">
+                    <field string="Class Name" name="class_name" context="{'group_by':'class_name'}"/>
                 </group>
 
             </search>

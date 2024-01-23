@@ -6,7 +6,7 @@ from odoo.exceptions import ValidationError
 class StudentDetails(models.Model):
     _name = "student.details"
     _description = "Students Details"
-    _rec_name = "student_name"
+    _rec_name = "rollNumber"
 
     student_name = fields.Char(string="Student name", help="Enter student name")
     father_name = fields.Char(string="Father name", help="Enter father name")
@@ -20,7 +20,13 @@ class StudentDetails(models.Model):
     gender = fields.Selection(
         [("male", "Male"), ("female", "Female")], "Gender", help="Select gender"
     )
-    student_class = fields.Many2one("class.details", string="Class name")
+    student_class = fields.Many2one(
+        "class.details",
+        string="Class name",
+        help="Enter class name in format like - [10th-A]",
+    )
+    attendance = fields.Many2many("attendance.details")
+    attendance_count = fields.Integer(compute="_compute_attendance_count")
 
     @api.depends("dateOfBirth")
     def _compute_age(self):
@@ -45,3 +51,16 @@ class StudentDetails(models.Model):
         for record in self:
             if len(record.phone_number) != 10:
                 raise ValidationError("Please add proper 10 digit phone number")
+
+    def _compute_attendance_count(self):
+        for record in self:
+            record.attendance_count = len(self.attendance)
+
+    def attendance_button(self):
+        return {
+            "name": ("Attendance Sheet"),
+            "view_mode": "tree,form",
+            "res_model": "attendance.details",
+            "type": "ir.actions.act_window",
+            "domain": [("student", "=", self.rollNumber)],
+        }
