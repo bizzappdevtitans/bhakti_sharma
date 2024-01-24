@@ -2,7 +2,7 @@
 <odoo>
 
     <record id="action_student_details_menu" model="ir.actions.act_window">
-        <field name="name">student.details.menu</field>
+        <field name="name">Student Details</field>
         <field name="res_model">student.details</field>
         <field name="view_mode">tree,form,search</field>
     </record>
@@ -13,12 +13,18 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
-                    <!-- Smart button(Student Attendance)  -->
+
                     <div class="oe_button_box">
                     <button class=" oe_stat_button" name="attendance_button" type="object" icon="fa-list-alt">
                     <span>
                         <field name="attendance_count" class="o_stat_value"/>
                         <span class="o_stat_text">Attendance</span>
+                    </span>
+                    </button>
+                    <button class=" oe_stat_button" name="exam_button" type="object" icon="fa-th-list">
+                    <span>
+                        <field name="exam_count" class="o_stat_value"/>
+                        <span class="o_stat_text">Exam</span>
                     </span>
                     </button>
                     </div>

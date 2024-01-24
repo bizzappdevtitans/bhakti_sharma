@@ -7,6 +7,9 @@ class StudentDetails(models.Model):
     _name = "student.details"
     _description = "Students Details"
     _rec_name = "rollNumber"
+    _sql_constraints = [
+        ("uniq_id", "unique(rollNumber,student_classu)", "unique roll number"),
+    ]
 
     student_name = fields.Char(string="Student name", help="Enter student name")
     father_name = fields.Char(string="Father name", help="Enter father name")
@@ -27,6 +30,8 @@ class StudentDetails(models.Model):
     )
     attendance = fields.Many2many("attendance.details")
     attendance_count = fields.Integer(compute="_compute_attendance_count")
+    exam_count = fields.Integer(compute="_compute_exam_count")
+    exams = fields.Many2many("exam.details")
 
     @api.depends("dateOfBirth")
     def _compute_age(self):
@@ -64,3 +69,32 @@ class StudentDetails(models.Model):
             "type": "ir.actions.act_window",
             "domain": [("student", "=", self.rollNumber)],
         }
+
+    def _compute_exam_count(self):
+        for record in self:
+            record.exam_count = len(self.exams)
+
+    def exam_button(self):
+        for record in self:
+            if record.exam_count > 1:
+                # print(record.exam_count)
+                return {
+                    "name": ("Exam details"),
+                    "view_mode": "tree",
+                    "res_model": "exam.details",
+                    "type": "ir.actions.act_window",
+                    "domain": [("student_names", "=", self.rollNumber)],
+                }
+            else:
+                # print(record.exam_count)
+                return {
+                    "name": ("Exam Details"),
+                    "view_type": "form",
+                    "view_mode": "form",
+                    "res_model": "exam.details",
+                    "type": "ir.actions.act_window",
+                    # "context": {
+                    #     "default_model": "student.details",
+                    #     "default_res_id": self.student_names,
+                    # },
+                }

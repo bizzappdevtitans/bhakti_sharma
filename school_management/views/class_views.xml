@@ -2,7 +2,7 @@
 <odoo>
 
     <record id="action_class_details_menu" model="ir.actions.act_window">
-        <field name="name">class.details.menu</field>
+        <field name="name">Class Details</field>
         <field name="res_model">class.details</field>
         <field name="view_mode">tree,form,search</field>
     </record>
@@ -14,24 +14,34 @@
                 <form>
                     <sheet>
                         <div class="oe_button_box">
-                        <button class=" oe_stat_button" name="attendance_button" type="object" icon="fa-list-alt">
-                        <span>
-                            <field name="attendance_count" class="o_stat_value"/>
-                            <span class="o_stat_text">Attendance</span>
-                        </span>
-                        </button>
-                        <button class=" oe_stat_button" name="student_button" type="object" icon="fa-users">
-                        <span>
-                            <field name="student_count" class="o_stat_value"/>
-                            <span class="o_stat_text">Total students</span>
-                        </span>
-                        </button>
-                         <button class=" oe_stat_button" name="subject_button" type="object" icon="fa-book">
-                        <span>
-                            <field name="subject_count" class="o_stat_value"/>
-                            <span class="o_stat_text">Total subjects</span>
-                        </span>
-                        </button>
+                            <button class=" oe_stat_button" name="attendance_button" type="object" icon="fa-list-alt">
+                            <span>
+                                <field name="attendance_count" class="o_stat_value"/>
+                                <span class="o_stat_text">Attendance</span>
+                            </span>
+                            </button>
+
+                            <button class=" oe_stat_button" name="student_button" type="object" icon="fa-users">
+                            <span>
+                                <field name="student_count" class="o_stat_value"/>
+                                <span class="o_stat_text">Total students</span>
+                            </span>
+                            </button>
+
+                            <button class=" oe_stat_button" name="subject_button" type="object" icon="fa-book">
+                            <span>
+                                <field name="subject_count" class="o_stat_value"/>
+                                <span class="o_stat_text">Total subjects</span>
+                            </span>
+                            </button>
+
+                            <button class=" oe_stat_button" name="exam_button" type="object" icon="fa-th-list">
+                            <span>
+                                <field name="exam_count" class="o_stat_value"/>
+                                <span class="o_stat_text">Exam</span>
+                            </span>
+                            </button>
+
                         </div>
                         <div class="oe_title">
                             <h2>Class Details</h2>

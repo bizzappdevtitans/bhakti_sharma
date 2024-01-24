@@ -2,7 +2,7 @@
 <odoo>
 
     <record id="action_subject_details_menu" model="ir.actions.act_window">
-        <field name="name">subject.details.menu</field>
+        <field name="name">Subject Details</field>
         <field name="res_model">subject.details</field>
         <field name="view_mode">tree,form,search</field>
     </record>
@@ -13,6 +13,7 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet>
+
                         <div class="oe_title">
                             <h2>Subject Details</h2>
                         </div>

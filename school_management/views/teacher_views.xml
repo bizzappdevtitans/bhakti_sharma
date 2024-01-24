@@ -2,7 +2,7 @@
 <odoo>
 
     <record id="action_teacher_details_menu" model="ir.actions.act_window">
-        <field name="name">teacher.details.menu</field>
+        <field name="name">Teacher Details</field>
         <field name="res_model">teacher.details</field>
         <field name="view_mode">tree,form,search</field>
     </record>

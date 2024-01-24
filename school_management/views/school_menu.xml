@@ -42,5 +42,10 @@
         parent="school_menu"
         action="action_subject_details_menu"/>
 
+    <menuitem
+        id="exam_menu"
+        name="Exam"
+        parent="school_menu"
+        action="action_exam_details_menu"/>
 
 </odoo>

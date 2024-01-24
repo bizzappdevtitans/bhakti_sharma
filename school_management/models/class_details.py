@@ -25,6 +25,9 @@ class ClassDetails(models.Model):
     attendance_count = fields.Integer(compute="_compute_attendance_count")
     subject_count = fields.Integer(compute="_compute_subject_count")
 
+    exam_count = fields.Integer(compute="_compute_exam_count")
+    exams = fields.Many2many("exam.details")
+
     def _compute_student_count(self):
         for record in self:
             record.student_count = len(record.students)
@@ -36,6 +39,19 @@ class ClassDetails(models.Model):
     def _compute_subject_count(self):
         for record in self:
             record.subject_count = len(record.subject)
+
+    def _compute_exam_count(self):
+        for record in self:
+            record.exam_count = len(self.exams)
+
+    def exam_button(self):
+        return {
+            "name": ("Exam details"),
+            "view_mode": "tree,form",
+            "res_model": "exam.details",
+            "type": "ir.actions.act_window",
+            "domain": [("class_name", "=", self.class_name)],
+        }
 
     def attendance_button(self):
         return {

@@ -2,7 +2,7 @@
 <odoo>
 
     <record id="action_attendance_details_menu" model="ir.actions.act_window">
-        <field name="name">attendance.details.menu</field>
+        <field name="name">Attendance Details</field>
         <field name="res_model">attendance.details</field>
         <field name="view_mode">tree,form,search</field>
     </record>
