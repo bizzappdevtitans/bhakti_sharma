@@ -8,7 +8,7 @@ class StudentDetails(models.Model):
     _description = "Students Details"
     _rec_name = "rollNumber"
     _sql_constraints = [
-        ("uniq_id", "unique(rollNumber,student_classu)", "unique roll number"),
+        ("Students", "unique(rollNumber)", "ROLL NUMBER MUST BE UNIQUE"),
     ]
 
     student_name = fields.Char(string="Student name", help="Enter student name")
@@ -62,13 +62,23 @@ class StudentDetails(models.Model):
             record.attendance_count = len(self.attendance)
 
     def attendance_button(self):
-        return {
-            "name": ("Attendance Sheet"),
-            "view_mode": "tree,form",
-            "res_model": "attendance.details",
-            "type": "ir.actions.act_window",
-            "domain": [("student", "=", self.rollNumber)],
-        }
+        for record in self:
+            if record.exam_count > 1:
+                return {
+                    "name": ("Attendance Sheet"),
+                    "view_mode": "tree,form",
+                    "res_model": "attendance.details",
+                    "type": "ir.actions.act_window",
+                    "domain": [("student", "=", self.rollNumber)],
+                }
+            else:
+                return {
+                    "name": ("Attendance Sheet"),
+                    "view_mode": "form",
+                    "res_model": "attendance.details",
+                    "type": "ir.actions.act_window",
+                    "domain": [("student", "=", self.rollNumber)],
+                }
 
     def _compute_exam_count(self):
         for record in self:
@@ -80,21 +90,17 @@ class StudentDetails(models.Model):
                 # print(record.exam_count)
                 return {
                     "name": ("Exam details"),
-                    "view_mode": "tree",
+                    "view_mode": "tree,form",
                     "res_model": "exam.details",
                     "type": "ir.actions.act_window",
                     "domain": [("student_names", "=", self.rollNumber)],
                 }
             else:
-                # print(record.exam_count)
                 return {
-                    "name": ("Exam Details"),
+                    "name": ("Exam"),
                     "view_type": "form",
                     "view_mode": "form",
                     "res_model": "exam.details",
                     "type": "ir.actions.act_window",
-                    # "context": {
-                    #     "default_model": "student.details",
-                    #     "default_res_id": self.student_names,
-                    # },
+                    "res_id": record.exams.id,
                 }

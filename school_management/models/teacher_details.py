@@ -26,13 +26,23 @@ class TeacherDetails(models.Model):
             record.subject_count = len(record.subject_data)
 
     def subject_button(self):
-        return {
-            "name": "Total subjects",
-            "view_mode": "tree,form",
-            "res_model": "subject.details",
-            "type": "ir.actions.act_window",
-            "domain": [("teacher_name", "=", self.teacher_name)],
-        }
+        for record in self:
+            if record.subject_count > 1:
+                return {
+                    "name": "Total subjects",
+                    "view_mode": "tree,form",
+                    "res_model": "subject.details",
+                    "type": "ir.actions.act_window",
+                    "domain": [("teacher_name", "=", self.teacher_name)],
+                }
+            else:
+                return {
+                    "name": "Subject",
+                    "view_mode": "form",
+                    "res_model": "subject.details",
+                    "type": "ir.actions.act_window",
+                    "res_id": record.subject_data.id,
+                }
 
     @api.depends("dateOfBirth")
     def _compute_age(self):

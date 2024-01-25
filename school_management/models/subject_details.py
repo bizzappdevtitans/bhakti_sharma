@@ -12,5 +12,3 @@ class SubjectDetails(models.Model):
     teacher_name = fields.Many2one("teacher.details", "Teacher Details")
     textBooks = fields.Html("Textbooks", help="Information Related textbooks")
     url = fields.Text("Url to refer", help="url to understand subjects chapter")
-
-

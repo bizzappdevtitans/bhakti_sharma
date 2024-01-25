@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
     <record id="action_exam_details_menu" model="ir.actions.act_window">
         <field name="name">Exam Details</field>
         <field name="res_model">exam.details</field>
-        <field name="view_mode">tree,form</field>
-         <field name="view_id" ref="school_management.view_exam_details_form"/>
+        <field name="view_mode">tree,form,search</field>
     </record>
 
     <record id="view_exam_details_form" model="ir.ui.view">
         <field name="name">exam.details.form</field>
         <field name="model">exam.details</field>
-
         <field name="arch" type="xml">
             <form>
                 <sheet>

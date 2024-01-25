@@ -15,13 +15,13 @@
                 <sheet>
 
                     <div class="oe_button_box">
-                    <button class=" oe_stat_button" name="attendance_button" type="object" icon="fa-list-alt">
+                    <button class=" oe_stat_button" name="attendance_button" type="object" icon="fa-list-alt" attrs="{'invisible':[('attendance_count', '==',0)]}">
                     <span>
                         <field name="attendance_count" class="o_stat_value"/>
                         <span class="o_stat_text">Attendance</span>
                     </span>
                     </button>
-                    <button class=" oe_stat_button" name="exam_button" type="object" icon="fa-th-list">
+                    <button class=" oe_stat_button" name="exam_button" type="object" icon="fa-th-list" attrs="{'invisible':[('exam_count', '==',0)]}">
                     <span>
                         <field name="exam_count" class="o_stat_value"/>
                         <span class="o_stat_text">Exam</span>

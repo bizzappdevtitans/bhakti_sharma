@@ -35,6 +35,8 @@ class AttendanceDetails(models.Model):
             record.student = record.class_name.students.filtered(
                 lambda name: name.student_class == record.class_name
             )
-            print(record.class_name.students.filtered(
-                lambda name: name.student_class == record.class_name
-            ))
+            print(
+                record.class_name.students.filtered(
+                    lambda name: name.student_class == record.class_name
+                )
+            )

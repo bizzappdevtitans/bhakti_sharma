@@ -17,10 +17,20 @@ class FacilityDetails(models.Model):
             record.class_count = len(record.classes)
 
     def class_button(self):
-        return {
-            "name": "Class with same facility",
-            "view_mode": "tree,form",
-            "res_model": "class.details",
-            "type": "ir.actions.act_window",
-            "domain": [("facilities", "=", self.facility_name)],
-        }
+        for record in self:
+            if record.class_count > 1:
+                return {
+                    "name": "Classes with same facility",
+                    "view_mode": "tree,form",
+                    "res_model": "class.details",
+                    "type": "ir.actions.act_window",
+                    "domain": [("facilities", "=", self.facility_name)],
+                }
+            else:
+                return {
+                    "name": "Classe with same facility",
+                    "view_mode": "form",
+                    "res_model": "class.details",
+                    "type": "ir.actions.act_window",
+                    "res_id": record.classes.id,
+                }
