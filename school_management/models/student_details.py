@@ -15,6 +15,12 @@ class StudentDetails(models.Model):
     father_name = fields.Char(string="Father name", help="Enter father name")
     mother_name = fields.Char(string="Mother name", help="Enter mother name")
     rollNumber = fields.Char(string="Roll number", help="Enter roll number")
+    sequence_number = fields.Char(
+        "Students sequence",
+        required="True",
+        readonly=True,
+        default="New",
+    )
     address = fields.Html(string="Address", help="Enter address")
     dateOfBirth = fields.Date("Date Of Birth", help="date of birth")
     age = fields.Integer("Age", help="Enter age", compute="_compute_age")
@@ -33,15 +39,15 @@ class StudentDetails(models.Model):
     exam_count = fields.Integer(compute="_compute_exam_count")
     exams = fields.Many2many("exam.details")
 
-    @api.depends("dateOfBirth")
-    def _compute_age(self):
-        for record in self:
-            today = date.today()
-            if record.dateOfBirth:
-                record.age = today.year - record.dateOfBirth.year
-            else:
-                record.age = 0
+    # generate unique number for students record
+    @api.model
+    def create(self, vals):
+        vals["sequence_number"] = self.env["ir.sequence"].next_by_code(
+            "student.details"
+        )
+        return super(StudentDetails, self).create(vals)
 
+    # validation on date
     @api.constrains("dateOfBirth")
     def _validate_date(self):
         for record in self:
@@ -51,12 +57,24 @@ class StudentDetails(models.Model):
                     "Entered date is not valid ..please enter date of birth again"
                 )
 
+    # compute age according to date
+    @api.depends("dateOfBirth")
+    def _compute_age(self):
+        for record in self:
+            today = date.today()
+            if record.dateOfBirth:
+                record.age = today.year - record.dateOfBirth.year
+            else:
+                record.age = 0
+
+    # validate the phone number
     @api.constrains("phone_number")
     def _validate_phoneNumber(self):
         for record in self:
             if len(record.phone_number) != 10:
                 raise ValidationError("Please add proper 10 digit phone number")
 
+    # count the number of attendance
     def _compute_attendance_count(self):
         for record in self:
             record.attendance_count = len(self.attendance)
@@ -78,8 +96,10 @@ class StudentDetails(models.Model):
                     "res_model": "attendance.details",
                     "type": "ir.actions.act_window",
                     "domain": [("student", "=", self.rollNumber)],
+                    "res_id": record.attendance.id,
                 }
 
+    # count the number od exmas
     def _compute_exam_count(self):
         for record in self:
             record.exam_count = len(self.exams)

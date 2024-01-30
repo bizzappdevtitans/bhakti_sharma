@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import models, fields, api
 
 
 class ExamDetails(models.Model):
@@ -25,3 +25,11 @@ class ExamDetails(models.Model):
     dateTime = fields.Datetime("Date and Time")
     total_marks = fields.Integer("Total marks")
     passing_marks = fields.Integer("Passing marks")
+
+    exam_number = fields.Char("Exam Number", readonly=True, default="New")
+
+    # generate unique sequence number for evry exams record
+    @api.model
+    def create(self, records):
+        records["exam_number"] = self.env["ir.sequence"].next_by_code("exam.details")
+        return super(ExamDetails, self).create(records)

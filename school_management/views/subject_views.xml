@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <!-- Action -->
     <record id="action_subject_details_menu" model="ir.actions.act_window">
         <field name="name">Subject Details</field>
         <field name="res_model">subject.details</field>
         <field name="view_mode">tree,form,search</field>
     </record>
 
+    <!-- Form view -->
      <record id="view_subject_details_form" model="ir.ui.view">
             <field name="name">subject.details.form</field>
             <field name="model">subject.details</field>
@@ -35,6 +37,7 @@
             </field>
     </record>
 
+    <!-- Tree view -->
     <record id="view_subject_details_tree" model="ir.ui.view">
         <field name="name">subject.details.tree</field>
         <field name="model">subject.details</field>
@@ -50,6 +53,7 @@
         </field>
     </record>
 
+    <!-- Search view -->
     <record id="view_subject_details_search" model="ir.ui.view">
         <field name="name">subject.details.search</field>
         <field name="model">subject.details</field>

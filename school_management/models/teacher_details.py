@@ -21,6 +21,7 @@ class TeacherDetails(models.Model):
     )
     subject_count = fields.Integer(compute="_compute_subject_count")
 
+    # count the number of subjects
     def _compute_subject_count(self):
         for record in self:
             record.subject_count = len(record.subject_data)
@@ -44,15 +45,7 @@ class TeacherDetails(models.Model):
                     "res_id": record.subject_data.id,
                 }
 
-    @api.depends("dateOfBirth")
-    def _compute_age(self):
-        for record in self:
-            today = date.today()
-            if record.dateOfBirth:
-                record.age = today.year - record.dateOfBirth.year
-            else:
-                record.age = 0
-
+    # validate the date
     @api.constrains("dateOfBirth")
     def _validate_date(self):
         for record in self:
@@ -62,6 +55,17 @@ class TeacherDetails(models.Model):
                     "Entered date is not valid ..please enter date of birth again"
                 )
 
+    # compute the age according to date
+    @api.depends("dateOfBirth")
+    def _compute_age(self):
+        for record in self:
+            today = date.today()
+            if record.dateOfBirth:
+                record.age = today.year - record.dateOfBirth.year
+            else:
+                record.age = 0
+
+    # validate the phone number
     @api.constrains("phone_number")
     def _validate_phoneNumber(self):
         for record in self:

@@ -12,6 +12,7 @@ class FacilityDetails(models.Model):
     classes = fields.Many2many("class.details")
     class_count = fields.Integer(compute="_compute_class_count")
 
+    # Count the number of classes
     def _compute_class_count(self):
         for record in self:
             record.class_count = len(record.classes)

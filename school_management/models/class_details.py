@@ -24,26 +24,87 @@ class ClassDetails(models.Model):
     student_count = fields.Integer(compute="_compute_student_count")
     attendance_count = fields.Integer(compute="_compute_attendance_count")
     subject_count = fields.Integer(compute="_compute_subject_count")
-
     exam_count = fields.Integer(compute="_compute_exam_count")
     exams = fields.Many2many("exam.details")
 
+    # class name must be unique
     _sql_constraints = [
         ("unique_class", "unique(class_name)", "class name must be unique")
     ]
 
+    # Count the number of students
     def _compute_student_count(self):
         for record in self:
             record.student_count = len(record.students)
 
+    def student_button(self):
+        for record in self:
+            if record.student_count > 1:
+                return {
+                    "name": ("Total Students"),
+                    "view_mode": "tree,form",
+                    "res_model": "student.details",
+                    "type": "ir.actions.act_window",
+                    "domain": [("student_class", "=", self.class_name)],
+                }
+            else:
+                return {
+                    "name": ("Student"),
+                    "view_mode": "form",
+                    "res_model": "student.details",
+                    "type": "ir.actions.act_window",
+                    "res_id": record.students.id,
+                }
+
+    # Count the number of attendance
     def _compute_attendance_count(self):
         for record in self:
             record.attendance_count = len(record.attendance)
 
+    def attendance_button(self):
+        for record in self:
+            if record.attendance_count > 1:
+                return {
+                    "name": ("Attendance Sheet"),
+                    "view_mode": "tree,form",
+                    "res_model": "attendance.details",
+                    "type": "ir.actions.act_window",
+                    "domain": [("class_name", "=", self.class_name)],
+                }
+            else:
+                return {
+                    "name": ("Attendance Sheet"),
+                    "view_mode": "form",
+                    "res_model": "attendance.details",
+                    "type": "ir.actions.act_window",
+                    "res_id": record.attendance.id,
+                }
+
+    # Count the number of subjects
     def _compute_subject_count(self):
         for record in self:
             record.subject_count = len(record.subject)
 
+    def subject_button(self):
+        for record in self:
+            if record.subject_count > 1:
+                return {
+                    "name": "Total subjects",
+                    "view_mode": "tree,form",
+                    "res_model": "subject.details",
+                    "type": "ir.actions.act_window",
+                    "domain": [("class_name", "=", self.class_name)],
+                }
+            else:
+                return {
+                    "name": "Subject",
+                    "view_mode": "form",
+                    "res_model": "subject.details",
+                    "type": "ir.actions.act_window",
+                    "res_id": record.subject.id,
+                }
+
+    # Count the number of exams
     def _compute_exam_count(self):
         for record in self:
             record.exam_count = len(self.exams)
@@ -65,61 +126,4 @@ class ClassDetails(models.Model):
                     "res_model": "exam.details",
                     "type": "ir.actions.act_window",
                     "res_id": record.exams.id,
-                }
-
-    def attendance_button(self):
-        for record in self:
-            if record.attendance_count > 1:
-                return {
-                    "name": ("Attendance Sheet"),
-                    "view_mode": "tree,form",
-                    "res_model": "attendance.details",
-                    "type": "ir.actions.act_window",
-                    "domain": [("class_name", "=", self.class_name)],
-                }
-            else:
-                return {
-                    "name": ("Attendance Sheet"),
-                    "view_mode": "form",
-                    "res_model": "attendance.details",
-                    "type": "ir.actions.act_window",
-                    "res_id": record.attendance.id,
-                }
-
-    def student_button(self):
-        for record in self:
-            if record.student_count > 1:
-                return {
-                    "name": ("Total Students"),
-                    "view_mode": "tree,form",
-                    "res_model": "student.details",
-                    "type": "ir.actions.act_window",
-                    "domain": [("student_class", "=", self.class_name)],
-                }
-            else:
-                return {
-                    "name": ("Student"),
-                    "view_mode": "form",
-                    "res_model": "student.details",
-                    "type": "ir.actions.act_window",
-                    "res_id": record.students.id,
-                }
-
-    def subject_button(self):
-        for record in self:
-            if record.subject_count > 1:
-                return {
-                    "name": "Total subjects",
-                    "view_mode": "tree,form",
-                    "res_model": "subject.details",
-                    "type": "ir.actions.act_window",
-                    "domain": [("class_name", "=", self.class_name)],
-                }
-            else:
-                return {
-                    "name": "Subject",
-                    "view_mode": "form",
-                    "res_model": "subject.details",
-                    "type": "ir.actions.act_window",
-                    "res_id": record.subject.id,
                 }

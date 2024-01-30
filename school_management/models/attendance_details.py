@@ -23,12 +23,14 @@ class AttendanceDetails(models.Model):
         required=True,
     )
 
+    # condition on startTime and endTime
     @api.constrains("startTime")
     def _validate_startTime(self):
         for record in self:
             if record.startTime > record.endTime:
                 raise ValidationError("Please check start time and end time")
 
+    # By selecing class name all the records of students of that particular class we get
     @api.onchange("class_name")
     def _compute_student(self):
         for record in self:
