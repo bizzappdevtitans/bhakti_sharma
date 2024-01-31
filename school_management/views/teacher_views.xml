@@ -70,6 +70,7 @@
         <field name="model">teacher.details</field>
         <field name="arch" type="xml">
             <tree>
+                <field name="sequence_number"/>
                 <field name="teacher_name"/>
                 <field name="gender"/>
                 <field name="dateOfBirth" widget="date"/>

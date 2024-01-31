@@ -101,6 +101,7 @@
         <field name="model">class.details</field>
         <field name="arch" type="xml">
             <tree>
+                <field name="sequence_number"/>
                 <field name="class_name"/>
                 <field name="class_teacher"/>
                 <field name="facilities"  widget="many2many_tags" options="{'color_field': 'color'}"/>

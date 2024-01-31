@@ -57,6 +57,7 @@
             <field name="model">attendance.details</field>
             <field name="arch" type="xml">
                 <tree decoration-danger="status=='absent'" decoration-success="status=='present'">
+                    <field name="sequence_number"/>
                     <field name="sheet_name"/>
                     <field name="attendance_date"/>
                     <field name="class_name"/>
@@ -66,6 +67,7 @@
                     <field name="endTime"/>
                     <field name="reason"/>
                     <field name="notes"/>
+                    <field name="state"/>
                 </tree>
             </field>
     </record>

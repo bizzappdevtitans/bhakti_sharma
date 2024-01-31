@@ -1,5 +1,5 @@
 from odoo import models, fields, api
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 
 class AttendanceDetails(models.Model):
@@ -22,8 +22,17 @@ class AttendanceDetails(models.Model):
         default="in_progress",
         required=True,
     )
+    sequence_number = fields.Char("Number", required=True, readonly=True, default="New")
 
-    # condition on startTime and endTime
+    # generate unique number for attendance record
+    @api.model
+    def create(self, vals):
+        if vals.get("sequence_number", "New") == "New":
+            vals["sequence_number"] = self.env["ir.sequence"].next_by_code(
+                "attendance.details"
+            )
+            return super(AttendanceDetails, self).create(vals)
+
     @api.constrains("startTime")
     def _validate_startTime(self):
         for record in self:
@@ -42,3 +51,20 @@ class AttendanceDetails(models.Model):
                     lambda name: name.student_class == record.class_name
                 )
             )
+
+    @api.onchange("status")
+    def _compute_status(self):
+        for record in self:
+            if record.status == "present":
+                print(record.write({"reason": "None"}))
+            else:
+                record.write({"reason": ""})
+
+    def unlink(self):
+        if self.class_name:
+            raise UserError(
+                "You can not delete the record which already have class details."
+            )
+        else:
+            self.clear_caches()
+            return super(AttendanceDetails, self).unlink()

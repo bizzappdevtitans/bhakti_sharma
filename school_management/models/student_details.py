@@ -1,22 +1,22 @@
 from odoo import models, fields, api
 from datetime import date
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 
 
 class StudentDetails(models.Model):
     _name = "student.details"
     _description = "Students Details"
     _rec_name = "rollNumber"
-    _sql_constraints = [
-        ("Students", "unique(rollNumber)", "ROLL NUMBER MUST BE UNIQUE"),
-    ]
+    # _sql_constraints = [
+    #     ("Students", "unique(rollNumber)", "ROLL NUMBER MUST BE UNIQUE"),
+    # ]
 
     student_name = fields.Char(string="Student name", help="Enter student name")
     father_name = fields.Char(string="Father name", help="Enter father name")
     mother_name = fields.Char(string="Mother name", help="Enter mother name")
     rollNumber = fields.Char(string="Roll number", help="Enter roll number")
     sequence_number = fields.Char(
-        "Students sequence",
+        "Number",
         required="True",
         readonly=True,
         default="New",
@@ -45,6 +45,7 @@ class StudentDetails(models.Model):
         vals["sequence_number"] = self.env["ir.sequence"].next_by_code(
             "student.details"
         )
+        vals["student_name"] = vals["student_name"].capitalize()
         return super(StudentDetails, self).create(vals)
 
     # validation on date
@@ -124,3 +125,6 @@ class StudentDetails(models.Model):
                     "type": "ir.actions.act_window",
                     "res_id": record.exams.id,
                 }
+
+    def unlink(self):
+        raise UserError("Can not delete Student records.")

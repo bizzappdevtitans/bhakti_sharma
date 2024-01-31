@@ -1,4 +1,5 @@
-from odoo import models, fields
+from odoo import models, fields, api
+from odoo.exceptions import UserError
 
 
 class ClassDetails(models.Model):
@@ -7,7 +8,7 @@ class ClassDetails(models.Model):
     _rec_name = "class_name"
 
     class_name = fields.Char(
-        "Class name", help="Enter class name like -[10th-B]", default="10th-B"
+        "Class name", help="Enter class name like -[10th-B]", default="9th-B"
     )
     class_teacher = fields.Many2one("teacher.details", "Class teacher")
     capacity = fields.Integer(
@@ -26,6 +27,17 @@ class ClassDetails(models.Model):
     subject_count = fields.Integer(compute="_compute_subject_count")
     exam_count = fields.Integer(compute="_compute_exam_count")
     exams = fields.Many2many("exam.details")
+
+    sequence_number = fields.Char("Number", required=True, readonly=True, default="New")
+
+    # generate unique number for class record
+    @api.model
+    def create(self, vals):
+        if vals.get("sequence_number", "New") == "New":
+            vals["sequence_number"] = self.env["ir.sequence"].next_by_code(
+                "class.details"
+            )
+            return super(ClassDetails, self).create(vals)
 
     # class name must be unique
     _sql_constraints = [
@@ -127,3 +139,18 @@ class ClassDetails(models.Model):
                     "type": "ir.actions.act_window",
                     "res_id": record.exams.id,
                 }
+
+    # all the 10 th class have 50 students capacity
+    @api.onchange("class_name")
+    def _compute_capacity(self):
+        for record in self:
+            if "10" in record.class_name:
+                record.write({"capacity": 50})
+
+    def unlink(self):
+        if self.subject:
+            raise UserError(
+                "You can not delete the record which already have subject details."
+            )
+        else:
+            return super(ClassDetails, self).unlink()

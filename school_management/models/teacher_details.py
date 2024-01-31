@@ -21,6 +21,17 @@ class TeacherDetails(models.Model):
     )
     subject_count = fields.Integer(compute="_compute_subject_count")
 
+    sequence_number = fields.Char("Number", required=True, readonly=True, default="New")
+
+    # generate unique number for Teacher record
+    @api.model
+    def create(self, vals):
+        if vals.get("sequence_number", "New") == "New":
+            vals["sequence_number"] = self.env["ir.sequence"].next_by_code(
+                "teacher.details"
+            )
+            return super(TeacherDetails, self).create(vals)
+
     # count the number of subjects
     def _compute_subject_count(self):
         for record in self:
@@ -59,11 +70,13 @@ class TeacherDetails(models.Model):
     @api.depends("dateOfBirth")
     def _compute_age(self):
         for record in self:
+            computed_age = 0
             today = date.today()
             if record.dateOfBirth:
-                record.age = today.year - record.dateOfBirth.year
+                computed_age = today.year - record.dateOfBirth.year
+                record.write({"age": computed_age})
             else:
-                record.age = 0
+                record.age = computed_age
 
     # validate the phone number
     @api.constrains("phone_number")

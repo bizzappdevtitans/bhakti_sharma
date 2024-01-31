@@ -21,6 +21,7 @@ class ExamDetails(models.Model):
         "student.details",
         string="Student Details",
         domain="[('student_class','in',class_name)]",
+        compute="_compute_students"
     )
     dateTime = fields.Datetime("Date and Time")
     total_marks = fields.Integer("Total marks")
@@ -33,3 +34,5 @@ class ExamDetails(models.Model):
     def create(self, records):
         records["exam_number"] = self.env["ir.sequence"].next_by_code("exam.details")
         return super(ExamDetails, self).create(records)
+
+

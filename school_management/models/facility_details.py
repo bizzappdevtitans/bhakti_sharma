@@ -1,4 +1,5 @@
-from odoo import models, fields
+from odoo import models, fields, api
+from odoo.exceptions import UserError
 
 
 class FacilityDetails(models.Model):
@@ -12,10 +13,23 @@ class FacilityDetails(models.Model):
     classes = fields.Many2many("class.details")
     class_count = fields.Integer(compute="_compute_class_count")
 
+    sequence_number = fields.Char("Number", required=True, readonly=True, default="New")
+
+    # generate unique number for facility record
+    @api.model
+    def create(self, vals):
+        if vals.get("sequence_number", "New") == "New":
+            vals["sequence_number"] = self.env["ir.sequence"].next_by_code(
+                "facility.details"
+            )
+            return super(FacilityDetails, self).create(vals)
+
     # Count the number of classes
     def _compute_class_count(self):
         for record in self:
-            record.class_count = len(record.classes)
+            record.class_count = self.env["class.details"].search_count(
+                [("facilities", "=", self.id)]
+            )
 
     def class_button(self):
         for record in self:
@@ -35,3 +49,12 @@ class FacilityDetails(models.Model):
                     "type": "ir.actions.act_window",
                     "res_id": record.classes.id,
                 }
+
+    def unlink(self):
+        if self.classes:
+            raise UserError(
+                "You can not delete the record which already have class details."
+            )
+        else:
+            self.clear_caches()
+            return super(FacilityDetails, self).unlink()

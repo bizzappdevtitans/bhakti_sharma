@@ -43,6 +43,7 @@
         <field name="model">subject.details</field>
         <field name="arch" type="xml">
             <tree>
+                <field name="sequence_number"/>
                 <field name="subject_name" decoration-bf="1"/>
                 <field name="class_name"/>
                 <field name="teacher_name"/>
