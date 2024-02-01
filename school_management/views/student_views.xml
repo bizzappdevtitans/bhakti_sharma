@@ -34,7 +34,6 @@
                     </div>
                     <group name="group_top">
                         <group name="group_left">
-                            <field name="sequence_number"/>
                             <field name="student_name" attrs="{'required':1}"/>
                             <field name="father_name"/>
                             <field name="mother_name"/>

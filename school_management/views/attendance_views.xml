@@ -24,7 +24,7 @@
                         <widget name="web_ribbon" title="Archived" bg_color="bg-warning" attrs="{'invisible':[('state','=','in_progress')],'invisible':[('state', 'in', ['in_progress', 'done'])]}"/>
                         <group name="group_top">
                             <group name="group_left">
-                                <field name="sheet_name"/>
+                                <field name="sheet_name" attrs="{'required':1}"/>
                                 <field name="attendance_date"/>
                                 <field name="status" widget="radio"/>
                                 <field name="reason"/>

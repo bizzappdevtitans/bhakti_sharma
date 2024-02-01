@@ -45,8 +45,45 @@ class StudentDetails(models.Model):
         vals["sequence_number"] = self.env["ir.sequence"].next_by_code(
             "student.details"
         )
-        vals["student_name"] = vals["student_name"].capitalize()
+        vals["student_name"] = vals["student_name"].upper()
         return super(StudentDetails, self).create(vals)
+
+    def write(self, vals):
+        if "student_name" in vals and vals["student_name"]:
+            vals["student_name"] = vals["student_name"].upper()
+            return super(StudentDetails, self).write(vals)
+
+    def name_get(self):
+        result = []
+        for record in self:
+            result.append(
+                (record.id, "[%s] - [%s]" % (record.rollNumber, record.student_name))
+            )
+        return result
+
+    def _name_search(
+        self, name="", args=None, operator="ilike", limit=100, name_get_uid=None
+    ):
+        args = list(args or [])
+        if not (name == "" and operator == "ilike"):
+            args += [
+                "|",
+                (self._rec_name, operator, name),
+                ("age", operator, name),
+            ]
+        return self._search(args, limit=limit, access_rights_uid=name_get_uid)
+
+    def read(self, fields=None, load='_classic_read'):
+        self.check_access_rule('read')
+        return super(StudentDetails, self).read(fields=fields, load=load)
+
+    def unlink(self):
+        if self.student_class or self.exams:
+            raise UserError(
+                "You can not delete those records which have class and exams details"
+            )
+        else:
+            return super(StudentDetails, self).unlink()
 
     # validation on date
     @api.constrains("dateOfBirth")
@@ -58,15 +95,16 @@ class StudentDetails(models.Model):
                     "Entered date is not valid ..please enter date of birth again"
                 )
 
-    # compute age according to date
     @api.depends("dateOfBirth")
     def _compute_age(self):
         for record in self:
+            computed_age = 0
             today = date.today()
             if record.dateOfBirth:
-                record.age = today.year - record.dateOfBirth.year
+                computed_age = today.year - record.dateOfBirth.year
+                record.update({"age": computed_age})
             else:
-                record.age = 0
+                record.update({"age": computed_age})
 
     # validate the phone number
     @api.constrains("phone_number")
@@ -125,6 +163,3 @@ class StudentDetails(models.Model):
                     "type": "ir.actions.act_window",
                     "res_id": record.exams.id,
                 }
-
-    def unlink(self):
-        raise UserError("Can not delete Student records.")

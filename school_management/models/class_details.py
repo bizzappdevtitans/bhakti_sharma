@@ -30,15 +30,6 @@ class ClassDetails(models.Model):
 
     sequence_number = fields.Char("Number", required=True, readonly=True, default="New")
 
-    # generate unique number for class record
-    @api.model
-    def create(self, vals):
-        if vals.get("sequence_number", "New") == "New":
-            vals["sequence_number"] = self.env["ir.sequence"].next_by_code(
-                "class.details"
-            )
-            return super(ClassDetails, self).create(vals)
-
     # class name must be unique
     _sql_constraints = [
         ("unique_class", "unique(class_name)", "class name must be unique")
@@ -119,7 +110,9 @@ class ClassDetails(models.Model):
     # Count the number of exams
     def _compute_exam_count(self):
         for record in self:
-            record.exam_count = len(self.exams)
+            record.exam_count = self.env["exam.details"].search_count(
+                [("class_name", "=", self.id)]
+            )
 
     def exam_button(self):
         for record in self:
@@ -139,6 +132,41 @@ class ClassDetails(models.Model):
                     "type": "ir.actions.act_window",
                     "res_id": record.exams.id,
                 }
+
+    # generate unique number for class record
+    @api.model
+    def create(self, vals):
+        if vals.get("sequence_number", "New") == "New":
+            vals["sequence_number"] = self.env["ir.sequence"].next_by_code(
+                "class.details"
+            )
+            vals["class_name"] = vals["class_name"].upper()
+            return super(ClassDetails, self).create(vals)
+
+    def write(self, vals):
+        if "class_name" in vals and vals["class_name"]:
+            vals["class_name"] = vals["class_name"].upper()
+            return super(ClassDetails, self).write(vals)
+
+    def _name_search(
+        self, name="", args=None, operator="ilike", limit=100, name_get_uid=None
+    ):
+        args = list(args or [])
+        if not (name == "" and operator == "ilike"):
+            args += [
+                "|",
+                (self._rec_name, operator, name),
+                ("class_teacher", operator, name),
+            ]
+        return self._search(args, limit=limit, access_rights_uid=name_get_uid)
+
+    def name_get(self):
+        result = []
+        for record in self:
+            result.append(
+                (record.id, "[%s]- [%s]" % (record.room_number, record.class_name))
+            )
+        return result
 
     # all the 10 th class have 50 students capacity
     @api.onchange("class_name")

@@ -21,18 +21,22 @@ class ExamDetails(models.Model):
         "student.details",
         string="Student Details",
         domain="[('student_class','in',class_name)]",
-        compute="_compute_students"
     )
     dateTime = fields.Datetime("Date and Time")
     total_marks = fields.Integer("Total marks")
     passing_marks = fields.Integer("Passing marks")
-
     exam_number = fields.Char("Exam Number", readonly=True, default="New")
 
-    # generate unique sequence number for evry exams record
+    # generate unique sequence number for every new exams record
     @api.model
     def create(self, records):
         records["exam_number"] = self.env["ir.sequence"].next_by_code("exam.details")
         return super(ExamDetails, self).create(records)
 
-
+    def name_get(self):
+        result = []
+        for record in self:
+            result.append(
+                (record.id, "%s - %s" % (record.exam_number, record.exam_name))
+            )
+        return result

@@ -37,6 +37,7 @@
                         <group name="group_right">
                             <field name="address" widget="html" options="{'resizable':true}" />
                             <field name="email"/>
+                            <button name="capitalize_name" string="Capitalize Name" type="object" class="oe_highlight" confirm="Are you sure to Capitalize the name"/>
                         </group>
                     </group>
                         <notebook>

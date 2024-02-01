@@ -32,10 +32,28 @@ class TeacherDetails(models.Model):
             )
             return super(TeacherDetails, self).create(vals)
 
+    def capitalize_name(self):
+        for record in self.read(["teacher_name"]):
+            result = self.write({"teacher_name": record["teacher_name"].capitalize()})
+            return result
+
+    def name_get(self):
+        result = []
+        for record in self:
+            result.append(
+                (
+                    record.id,
+                    "[%s]- [%s]" % (record.sequence_number, record.teacher_name),
+                )
+            )
+        return result
+
     # count the number of subjects
     def _compute_subject_count(self):
         for record in self:
-            record.subject_count = len(record.subject_data)
+            record.subject_count = self.env["subject.details"].search_count(
+                [("teacher_name", "=", self.id)]
+            )
 
     def subject_button(self):
         for record in self:
@@ -74,9 +92,9 @@ class TeacherDetails(models.Model):
             today = date.today()
             if record.dateOfBirth:
                 computed_age = today.year - record.dateOfBirth.year
-                record.write({"age": computed_age})
+                record.update({"age": computed_age})
             else:
-                record.age = computed_age
+                record.update({"age": computed_age})
 
     # validate the phone number
     @api.constrains("phone_number")

@@ -24,15 +24,7 @@ class AttendanceDetails(models.Model):
     )
     sequence_number = fields.Char("Number", required=True, readonly=True, default="New")
 
-    # generate unique number for attendance record
-    @api.model
-    def create(self, vals):
-        if vals.get("sequence_number", "New") == "New":
-            vals["sequence_number"] = self.env["ir.sequence"].next_by_code(
-                "attendance.details"
-            )
-            return super(AttendanceDetails, self).create(vals)
-
+    # validation on startTime and endTime
     @api.constrains("startTime")
     def _validate_startTime(self):
         for record in self:
@@ -52,6 +44,16 @@ class AttendanceDetails(models.Model):
                 )
             )
 
+    # generate unique number for attendance record
+    @api.model
+    def create(self, vals):
+        if vals.get("sequence_number", "New") == "New":
+            vals["sequence_number"] = self.env["ir.sequence"].next_by_code(
+                "attendance.details"
+            )
+            vals["sheet_name"] = vals["sheet_name"].capitalize()
+            return super(AttendanceDetails, self).create(vals)
+
     @api.onchange("status")
     def _compute_status(self):
         for record in self:
@@ -60,11 +62,36 @@ class AttendanceDetails(models.Model):
             else:
                 record.write({"reason": ""})
 
+    def write(self, vals):
+        if "sheet_name" in vals and vals["sheet_name"]:
+            vals["sheet_name"] = vals["sheet_name"].capitalize()
+            return super(AttendanceDetails, self).write(vals)
+
+    def name_get(self):
+        result = []
+        for record in self:
+            result.append(
+                (record.id, "%s - %s" % (record.sequence_number, record.sheet_name))
+            )
+        return result
+
+    def _name_search(
+        self, name="", args=None, operator="ilike", limit=100, name_get_uid=None
+    ):
+        args = list(args or [])
+        if not (name == "" and operator == "ilike"):
+            args += [
+                "|",
+                (self._rec_name, operator, name),
+                ("class_name", operator, name),
+            ]
+        return self._search(args, limit=limit, access_rights_uid=name_get_uid)
+
+    # restrict the user to delete the record which have class data
     def unlink(self):
         if self.class_name:
             raise UserError(
                 "You can not delete the record which already have class details."
             )
         else:
-            self.clear_caches()
             return super(AttendanceDetails, self).unlink()
