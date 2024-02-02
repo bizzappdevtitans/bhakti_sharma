@@ -1,0 +1,74 @@
+from odoo import models, fields, api
+
+
+class ResultDetails(models.Model):
+    _name = "result.details"
+    _description = "Information about results"
+    _rec_name = "result_name"
+
+    result_name = fields.Char("Result name")
+    class_name = fields.Many2one("class.details", "Class name")
+    student_name = fields.Many2one("student.details", "Student name")
+    total_marks = fields.Integer("Total marks", default=1)
+    obtained_marks = fields.Integer("Obtained marks")
+    percentage = fields.Float("Percentage", compute="_compute_percentage")
+    grade = fields.Char(
+        "Grade",
+        compute="_compute_grade",
+    )
+    sequence_number = fields.Char("Number", required=True, readonly=True, default="New")
+
+    @api.model
+    def create(self, vals):
+        if vals.get("sequence_number", "New") == "New":
+            vals["sequence_number"] = self.env["ir.sequence"].next_by_code(
+                "result.details"
+            )
+            vals["result_name"] = vals["result_name"].upper()
+            return super(ResultDetails, self).create(vals)
+
+    def write(self, vals):
+        if "result_name" in vals and vals["result_name"]:
+            vals["result_name"] = vals["result_name"].upper()
+        return super(ResultDetails, self).write(vals)
+
+    def name_get(self):
+        result = []
+        for record in self:
+            result.append(
+                (record.id, "[%s]-[%s]" % (record.sequence_number, record.result_name))
+            )
+        return result
+
+    def _name_search(
+        self, name="", args=None, operator="ilike", limit=100, name_get_uid=None
+    ):
+        args = list(args or [])
+        if not (name == "" and operator == "ilike"):
+            args += [
+                "|",
+                (self._rec_name, operator, name),
+                ("class_name", operator, name),
+            ]
+        return self._search(args, limit=limit, access_rights_uid=name_get_uid)
+
+    @api.onchange("class_name")
+    def _change_student_name(self):
+        result = {}
+        result["domain"] = {
+            "student_name": [("student_class", "=", self.class_name.id)]
+        }
+        return result
+
+    @api.depends("total_marks", "obtained_marks")
+    def _compute_percentage(self):
+        self.percentage = (self.obtained_marks / self.total_marks) * 100
+
+    @api.depends("percentage")
+    def _compute_grade(self):
+        if self.percentage >= 75:
+            self.grade = "A+"
+        elif self.percentage >= 45:
+            self.grade = "B+"
+        else:
+            self.grade = "Fail"

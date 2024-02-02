@@ -88,7 +88,9 @@
                 <group expand="0" string="Group By">
                     <filter string="Subject" name="subject_name" context="{'group_by':'subject_name'}"/>
                 </group>
-
+                <searchpanel>
+                    <field name="subject_name" enable_counters="1" icon="fa-solid fa-user"/>
+                </searchpanel>
             </search>
         </field>
     </record>

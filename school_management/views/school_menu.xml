@@ -48,4 +48,10 @@
         parent="school_menu"
         action="action_exam_details_menu"/>
 
+    <menuitem
+        id="result_menu"
+        name="Result"
+        parent="school_menu"
+        action="action_result_details_menu"/>
+
 </odoo>

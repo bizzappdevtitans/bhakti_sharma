@@ -28,7 +28,7 @@ class SubjectDetails(models.Model):
     def write(self, vals):
         if "subject_name" in vals and vals["subject_name"]:
             vals["subject_name"] = vals["subject_name"].upper()
-            return super(SubjectDetails, self).write(vals)
+        return super(SubjectDetails, self).write(vals)
 
     def name_get(self):
         result = []
@@ -50,4 +50,8 @@ class SubjectDetails(models.Model):
             ]
         return self._search(args, limit=limit, access_rights_uid=name_get_uid)
 
-
+    def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
+        domain = [("class_name", "=", "10TH-A")]
+        return super(SubjectDetails, self).search_read(
+            domain, fields, offset, limit, order
+        )

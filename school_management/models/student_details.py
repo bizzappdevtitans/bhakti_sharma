@@ -38,6 +38,8 @@ class StudentDetails(models.Model):
     attendance_count = fields.Integer(compute="_compute_attendance_count")
     exam_count = fields.Integer(compute="_compute_exam_count")
     exams = fields.Many2many("exam.details")
+    results = fields.One2many("result.details", "student_name", "Results")
+    result_count = fields.Integer(compute="_compute_result_count")
 
     # generate unique number for students record
     @api.model
@@ -51,7 +53,7 @@ class StudentDetails(models.Model):
     def write(self, vals):
         if "student_name" in vals and vals["student_name"]:
             vals["student_name"] = vals["student_name"].upper()
-            return super(StudentDetails, self).write(vals)
+        return super(StudentDetails, self).write(vals)
 
     def name_get(self):
         result = []
@@ -69,13 +71,15 @@ class StudentDetails(models.Model):
             args += [
                 "|",
                 (self._rec_name, operator, name),
-                ("age", operator, name),
+                ("rollNumber", operator, name),
             ]
         return self._search(args, limit=limit, access_rights_uid=name_get_uid)
 
-    def read(self, fields=None, load='_classic_read'):
-        self.check_access_rule('read')
-        return super(StudentDetails, self).read(fields=fields, load=load)
+    def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
+        domain = ["|", ("gender", "ilike", "male"), ("gender", "ilike", "female")]
+        return super(StudentDetails, self).search_read(
+            domain, fields, offset, limit, order
+        )
 
     def unlink(self):
         if self.student_class or self.exams:
@@ -102,9 +106,13 @@ class StudentDetails(models.Model):
             today = date.today()
             if record.dateOfBirth:
                 computed_age = today.year - record.dateOfBirth.year
-                record.update({"age": computed_age})
+                record.write({"age": computed_age})
             else:
-                record.update({"age": computed_age})
+                record.write({"age": computed_age})
+
+    def read(self, fields=None, load="_classic_read"):
+        self.check_access_rule("read")
+        return super(StudentDetails, self).read(fields=fields, load=load)
 
     # validate the phone number
     @api.constrains("phone_number")
@@ -162,4 +170,32 @@ class StudentDetails(models.Model):
                     "res_model": "exam.details",
                     "type": "ir.actions.act_window",
                     "res_id": record.exams.id,
+                }
+
+    # count the number of results
+    def _compute_result_count(self):
+        for record in self:
+            record.result_count = self.env["result.details"].search_count(
+                [("student_name", "=", self.id)]
+            )
+
+    def result_button(self):
+        for record in self:
+            if record.result_count > 1:
+                # print(record.exam_count)
+                return {
+                    "name": ("Results"),
+                    "view_mode": "tree,form",
+                    "res_model": "result.details",
+                    "type": "ir.actions.act_window",
+                    "domain": [("student_name", "=", self.id)],
+                }
+            else:
+                return {
+                    "name": ("Result"),
+                    "view_type": "form",
+                    "view_mode": "form",
+                    "res_model": "result.details",
+                    "type": "ir.actions.act_window",
+                    "res_id": record.results.id,
                 }

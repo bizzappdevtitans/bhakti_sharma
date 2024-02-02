@@ -37,6 +37,16 @@ class ExamDetails(models.Model):
         result = []
         for record in self:
             result.append(
-                (record.id, "%s - %s" % (record.exam_number, record.exam_name))
+                (
+                    record.id,
+                    "[%s] - [%s]"
+                    % (record.exam_name, record.subject_name.subject_name),
+                )
             )
         return result
+
+    def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
+        domain = [("exam_name", "ilike", "final term examination")]
+        return super(ExamDetails, self).search_read(
+            domain, fields, offset, limit, order
+        )

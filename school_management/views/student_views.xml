@@ -28,6 +28,12 @@
                         <span class="o_stat_text">Exam</span>
                     </span>
                     </button>
+                     <button class=" oe_stat_button" name="result_button" type="object" icon="fa-th-list" attrs="{'invisible':[('result_count', '==',0)]}">
+                    <span>
+                        <field name="result_count" class="o_stat_value"/>
+                        <span class="o_stat_text">Results</span>
+                    </span>
+                    </button>
                     </div>
                     <div class="oe_title">
                             <h2>Student Details</h2>

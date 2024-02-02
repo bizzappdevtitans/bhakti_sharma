@@ -16,6 +16,7 @@
         "views/attendance_views.xml",
         "views/subject_views.xml",
         "views/exam_views.xml",
+        "views/result_views.xml",
         "views/school_menu.xml",
     ],
     "application": True,

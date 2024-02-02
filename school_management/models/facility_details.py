@@ -22,14 +22,13 @@ class FacilityDetails(models.Model):
             vals["sequence_number"] = self.env["ir.sequence"].next_by_code(
                 "facility.details"
             )
-            vals["facility_name"] = vals["facility_name"].capitalize()
+            vals["facility_name"] = vals["facility_name"].upper()
             return super(FacilityDetails, self).create(vals)
 
     def write(self, vals):
         if "facility_name" in vals and vals["facility_name"]:
             vals["facility_name"] = vals["facility_name"].upper()
-            res = super(FacilityDetails, self).write(vals)
-            return res
+        return super(FacilityDetails, self).write(vals)
 
     def name_get(self):
         result = []

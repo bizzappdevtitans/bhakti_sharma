@@ -48,6 +48,12 @@ class TeacherDetails(models.Model):
             )
         return result
 
+    def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
+        domain = ["|", ("gender", "ilike", "male"), ("gender", "ilike", "female")]
+        return super(TeacherDetails, self).search_read(
+            domain, fields, offset, limit, order
+        )
+
     # count the number of subjects
     def _compute_subject_count(self):
         for record in self:

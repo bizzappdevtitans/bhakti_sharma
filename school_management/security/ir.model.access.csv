@@ -6,3 +6,4 @@ school_management.access_facility_details,access_facility_details,school_managem
 school_management.access_attendance_details,access_attendance_details,school_management.model_attendance_details,base.group_user,1,1,1,1
 school_management.access_subject_details,access_subject_details,school_management.model_subject_details,base.group_user,1,1,1,1
 school_management.access_exam_details,access_exam_details,school_management.model_exam_details,base.group_user,1,1,1,1
+school_management.access_result_details,access_result_details,school_management.model_result_details,base.group_user,1,1,1,1

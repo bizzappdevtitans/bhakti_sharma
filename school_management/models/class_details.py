@@ -21,7 +21,7 @@ class ClassDetails(models.Model):
     students = fields.One2many("student.details", "student_class", "Students")
     subject = fields.One2many("subject.details", "class_name", "Subjects")
     attendance = fields.One2many("attendance.details", "class_name", "Attendance")
-
+    results = fields.One2many("result.details", "class_name", "Result")
     student_count = fields.Integer(compute="_compute_student_count")
     attendance_count = fields.Integer(compute="_compute_attendance_count")
     subject_count = fields.Integer(compute="_compute_subject_count")
@@ -146,7 +146,7 @@ class ClassDetails(models.Model):
     def write(self, vals):
         if "class_name" in vals and vals["class_name"]:
             vals["class_name"] = vals["class_name"].upper()
-            return super(ClassDetails, self).write(vals)
+        return super(ClassDetails, self).write(vals)
 
     def _name_search(
         self, name="", args=None, operator="ilike", limit=100, name_get_uid=None

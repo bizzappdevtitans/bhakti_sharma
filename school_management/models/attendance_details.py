@@ -51,7 +51,7 @@ class AttendanceDetails(models.Model):
             vals["sequence_number"] = self.env["ir.sequence"].next_by_code(
                 "attendance.details"
             )
-            vals["sheet_name"] = vals["sheet_name"].capitalize()
+            vals["sheet_name"] = vals["sheet_name"].upper()
             return super(AttendanceDetails, self).create(vals)
 
     @api.onchange("status")
@@ -64,8 +64,8 @@ class AttendanceDetails(models.Model):
 
     def write(self, vals):
         if "sheet_name" in vals and vals["sheet_name"]:
-            vals["sheet_name"] = vals["sheet_name"].capitalize()
-            return super(AttendanceDetails, self).write(vals)
+            vals["sheet_name"] = vals["sheet_name"].upper()
+        return super(AttendanceDetails, self).write(vals)
 
     def name_get(self):
         result = []
@@ -86,6 +86,18 @@ class AttendanceDetails(models.Model):
                 ("class_name", operator, name),
             ]
         return self._search(args, limit=limit, access_rights_uid=name_get_uid)
+
+    def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
+        domain = [
+            "|",
+            "|",
+            ("state", "ilike", "in_progress"),
+            ("state", "ilike", "done"),
+            ("state", "ilike", "draft"),
+        ]
+        return super(AttendanceDetails, self).search_read(
+            domain, fields, offset, limit, order
+        )
 
     # restrict the user to delete the record which have class data
     def unlink(self):
