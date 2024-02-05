@@ -9,6 +9,7 @@
     "data": [
         "security/ir.model.access.csv",
         "data/ir_sequence_data.xml",
+        "data/school_data.xml",
         "views/student_views.xml",
         "views/class_views.xml",
         "views/teacher_views.xml",
@@ -17,6 +18,7 @@
         "views/subject_views.xml",
         "views/exam_views.xml",
         "views/result_views.xml",
+        "views/res_config_settings.xml",
         "views/school_menu.xml",
     ],
     "application": True,

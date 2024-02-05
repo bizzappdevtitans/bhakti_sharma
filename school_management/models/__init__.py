@@ -6,3 +6,4 @@ from . import attendance_details
 from . import subject_details
 from . import exam_details
 from . import result_details
+from . import res_config_settings

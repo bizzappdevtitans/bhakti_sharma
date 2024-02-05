@@ -62,13 +62,15 @@ class ResultDetails(models.Model):
 
     @api.depends("total_marks", "obtained_marks")
     def _compute_percentage(self):
-        self.percentage = (self.obtained_marks / self.total_marks) * 100
+        for record in self:
+            record.percentage = (record.obtained_marks / record.total_marks) * 100
 
     @api.depends("percentage")
     def _compute_grade(self):
-        if self.percentage >= 75:
-            self.grade = "A+"
-        elif self.percentage >= 45:
-            self.grade = "B+"
-        else:
-            self.grade = "Fail"
+        for record in self:
+            if record.percentage >= 75:
+                record.grade = "A+"
+            elif record.percentage >= 45:
+                record.grade = "B+"
+            else:
+                record.grade = "Fail"

@@ -48,7 +48,19 @@ class StudentDetails(models.Model):
             "student.details"
         )
         vals["student_name"] = vals["student_name"].upper()
-        return super(StudentDetails, self).create(vals)
+
+        allowed_students = (
+            self.env["ir.config_parameter"].get_param("allowed_students", "").split(",")
+        )
+
+        allowed_students = list(map(lambda x: int(x), allowed_students))
+
+        if int(vals["rollNumber"]) not in allowed_students:
+            raise ValidationError(
+                "You are only allowed to create the rollnumber 1,2,3,4,5,6,7,8,9,10"
+            )
+        else:
+            return super(StudentDetails, self).create(vals)
 
     def write(self, vals):
         if "student_name" in vals and vals["student_name"]:
@@ -87,6 +99,17 @@ class StudentDetails(models.Model):
                 "You can not delete those records which have class and exams details"
             )
         else:
+            deleted = (
+                int(
+                    self.env["ir.config_parameter"].get_param(
+                        "school.deleted_students", "0"
+                    )
+                )
+                + 1
+            )
+            self.env["ir.config_parameter"].set_param(
+                "school.deleted_students", deleted
+            )
             return super(StudentDetails, self).unlink()
 
     # validation on date

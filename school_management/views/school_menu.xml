@@ -54,4 +54,15 @@
         parent="school_menu"
         action="action_result_details_menu"/>
 
+    <menuitem
+        id="configuration_menu"
+        name="Configuartion"
+        parent="school_menu"/>
+
+    <menuitem
+        id="settings_menu"
+        name="Settings"
+        parent="configuration_menu"
+        action="action_school_config_settings"/>
+
 </odoo>
