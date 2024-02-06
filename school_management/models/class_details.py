@@ -1,5 +1,5 @@
 from odoo import models, fields, api
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 
 
 class ClassDetails(models.Model):
@@ -136,11 +136,17 @@ class ClassDetails(models.Model):
     # generate unique number for class record
     @api.model
     def create(self, vals):
-        if vals.get("sequence_number", "New") == "New":
-            vals["sequence_number"] = self.env["ir.sequence"].next_by_code(
-                "class.details"
-            )
-            vals["class_name"] = vals["class_name"].upper()
+        vals["sequence_number"] = self.env["ir.sequence"].next_by_code("class.details")
+        vals["class_name"] = vals["class_name"].upper()
+        available_rooms = (
+            self.env["ir.config_parameter"].get_param("available_rooms", "").split(",")
+        )
+
+        available_rooms = list(map(lambda x: int(x), available_rooms))
+
+        if int(vals["room_number"]) not in available_rooms:
+            raise ValidationError("Thiss room not available")
+        else:
             return super(ClassDetails, self).create(vals)
 
     def write(self, vals):

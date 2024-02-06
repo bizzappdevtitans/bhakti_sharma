@@ -46,7 +46,7 @@
                 <field name="exam_name"/>
                 <field name="subject_name"/>
                 <field name="class_name" widget="many2many_tags"/>
-                <field name="dateTime"/>
+                <field name="dateTime" widget="remaining_days"/>
                 <field name="total_marks"/>
                 <field name="passing_marks"/>
             </tree>

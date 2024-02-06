@@ -28,6 +28,12 @@
                                         <label class="col-lg-3 o_light_label" string="Deleted students" for="deleted_students"/>
                                         <div class="text-muted" ><field name="deleted_students" attrs="{'readonly':1}" /></div>
                                     </div>
+                                     <div class="row mt16">
+
+                                        <label class="col-lg-3 o_light_label" string="Available rooms" for="available_rooms"/>
+                                        <field name="available_rooms" class="oe_inline" style="width: 70% !important;"/>
+
+                                    </div>
 
                                 </div>
                             </div>

@@ -16,3 +16,7 @@ class ResConfigSettings(models.TransientModel):
     deleted_students = fields.Char(
         string="Deleted students", config_parameter="school.deleted_students", default=0
     )
+
+    available_rooms = fields.Char(
+        string="Available Room", config_parameter="class.available_rooms",default=0
+    )
