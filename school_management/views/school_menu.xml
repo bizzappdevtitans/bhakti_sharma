@@ -10,49 +10,49 @@
         id="student_menu"
         name="Student"
         parent="school_menu"
-        action="action_student_details_menu"/>
+        action="school_management_action_student_details_menu"/>
 
     <menuitem
         id="class_menu"
         name="Class"
         parent="school_menu"
-        action="action_class_details_menu"/>
+        action="school_management_action_class_details_menu"/>
 
     <menuitem
         id="teacher_menu"
         name="Teacher"
         parent="school_menu"
-        action="action_teacher_details_menu"/>
+        action="school_management_action_teacher_details_menu"/>
 
     <menuitem
         id="facility_menu"
         name="Facilities"
         parent="school_menu"
-        action="action_facility_details_menu"/>
+        action="school_management_action_facility_details_menu"/>
 
     <menuitem
         id="attendance_menu"
         name="Attendance"
         parent="school_menu"
-        action="action_attendance_details_menu"/>
+        action="school_management_action_attendance_details_menu"/>
 
     <menuitem
         id="subject_menu"
         name="Subject"
         parent="school_menu"
-        action="action_subject_details_menu"/>
+        action="school_management_action_subject_details_menu"/>
 
     <menuitem
         id="exam_menu"
         name="Exam"
         parent="school_menu"
-        action="action_exam_details_menu"/>
+        action="school_management_action_exam_details_menu"/>
 
     <menuitem
         id="result_menu"
         name="Result"
         parent="school_menu"
-        action="action_result_details_menu"/>
+        action="school_management_action_result_details_menu"/>
 
     <menuitem
         id="configuration_menu"
@@ -63,6 +63,6 @@
         id="settings_menu"
         name="Settings"
         parent="configuration_menu"
-        action="action_school_config_settings"/>
+        action="school_management_action_school_config_settings"/>
 
 </odoo>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
+    <data noupdate="1">
         <!-- Sequence for student -->
         <record id="student_details_sequenc_id" model="ir.sequence">
             <field name="name">Student Sequence</field>

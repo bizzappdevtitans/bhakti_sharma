@@ -7,16 +7,13 @@ class StudentDetails(models.Model):
     _name = "student.details"
     _description = "Students Details"
     _rec_name = "rollNumber"
-    # _sql_constraints = [
-    #     ("Students", "unique(rollNumber)", "ROLL NUMBER MUST BE UNIQUE"),
-    # ]
 
     student_name = fields.Char(string="Student name", help="Enter student name")
     father_name = fields.Char(string="Father name", help="Enter father name")
     mother_name = fields.Char(string="Mother name", help="Enter mother name")
     rollNumber = fields.Char(string="Roll number", help="Enter roll number")
     sequence_number = fields.Char(
-        "Number",
+        string="Number",
         required="True",
         readonly=True,
         default="New",
@@ -25,23 +22,22 @@ class StudentDetails(models.Model):
     dateOfBirth = fields.Date("Date Of Birth", help="date of birth")
     age = fields.Integer("Age", help="Enter age", compute="_compute_age")
     email = fields.Text(string="Email", help="enter email")
-    phone_number = fields.Text("Phone Number", help="Enter phone number")
+    phone_number = fields.Text(string="Phone Number", help="Enter phone number")
     gender = fields.Selection(
         [("male", "Male"), ("female", "Female")], "Gender", help="Select gender"
     )
-    student_class = fields.Many2one(
-        "class.details",
+    student_class_id = fields.Many2one(
+        comodel_name="class.details",
         string="Class name",
         help="Enter class name in format like - [10th-A]",
     )
-    attendance = fields.Many2many("attendance.details")
+    attendance_ids = fields.Many2many(comodel_name="attendance.details")
     attendance_count = fields.Integer(compute="_compute_attendance_count")
     exam_count = fields.Integer(compute="_compute_exam_count")
-    exams = fields.Many2many("exam.details")
-    results = fields.One2many("result.details", "student_name", "Results")
+    exam_ids = fields.Many2many(comodel_name="exam.details")
+    result_ids = fields.One2many(comodel_name="result.details", inverse_name="student_name_id", string="Results")
     result_count = fields.Integer(compute="_compute_result_count")
 
-    # generate unique number for students record
     @api.model
     def create(self, vals):
         vals["sequence_number"] = self.env["ir.sequence"].next_by_code(
@@ -94,7 +90,7 @@ class StudentDetails(models.Model):
         )
 
     def unlink(self):
-        if self.student_class or self.exams:
+        if self.student_class_id or self.exam_ids:
             raise UserError(
                 "You can not delete those records which have class and exams details"
             )
@@ -112,90 +108,80 @@ class StudentDetails(models.Model):
             )
             return super(StudentDetails, self).unlink()
 
-    # validation on date
     @api.constrains("dateOfBirth")
     def _validate_date(self):
-        for record in self:
-            today = date.today()
-            if record.dateOfBirth and record.dateOfBirth.year >= today.year:
-                raise ValidationError(
-                    "Entered date is not valid ..please enter date of birth again"
-                )
+        today = date.today()
+        if self.dateOfBirth and self.dateOfBirth.year >= today.year:
+            raise ValidationError(
+                "Entered date is not valid ..please enter date of birth again"
+            )
 
     @api.depends("dateOfBirth")
     def _compute_age(self):
         for record in self:
             computed_age = 0
             today = date.today()
-            if record.dateOfBirth:
-                computed_age = today.year - record.dateOfBirth.year
+            if not record.dateOfBirth:
                 record.write({"age": computed_age})
-            else:
-                record.write({"age": computed_age})
+            computed_age = today.year - record.dateOfBirth.year
+            record.write({"age": computed_age})
 
     def read(self, fields=None, load="_classic_read"):
         self.check_access_rule("read")
         return super(StudentDetails, self).read(fields=fields, load=load)
 
-    # validate the phone number
     @api.constrains("phone_number")
     def _validate_phoneNumber(self):
         for record in self:
             if len(record.phone_number) != 10:
                 raise ValidationError("Please add proper 10 digit phone number")
 
-    # count the number of attendance
     def _compute_attendance_count(self):
         for record in self:
-            record.attendance_count = len(self.attendance)
+            record.attendance_count = len(self.attendance_ids)
 
     def attendance_button(self):
         for record in self:
-            if record.exam_count > 1:
-                return {
-                    "name": ("Attendance Sheet"),
-                    "view_mode": "tree,form",
-                    "res_model": "attendance.details",
-                    "type": "ir.actions.act_window",
-                    "domain": [("student", "=", self.rollNumber)],
-                }
-            else:
+            if not record.exam_count > 1:
                 return {
                     "name": ("Attendance Sheet"),
                     "view_mode": "form",
                     "res_model": "attendance.details",
                     "type": "ir.actions.act_window",
                     "domain": [("student", "=", self.rollNumber)],
-                    "res_id": record.attendance.id,
+                    "res_id": record.attendance_ids.id,
                 }
+            return {
+                "name": ("Attendance Sheet"),
+                "view_mode": "tree,form",
+                "res_model": "attendance.details",
+                "type": "ir.actions.act_window",
+                "domain": [("student", "=", self.rollNumber)],
+            }
 
-    # count the number od exmas
     def _compute_exam_count(self):
         for record in self:
-            record.exam_count = len(self.exams)
+            record.exam_count = len(self.exam_ids)
 
     def exam_button(self):
         for record in self:
-            if record.exam_count > 1:
-                # print(record.exam_count)
-                return {
-                    "name": ("Exam details"),
-                    "view_mode": "tree,form",
-                    "res_model": "exam.details",
-                    "type": "ir.actions.act_window",
-                    "domain": [("student_names", "=", self.rollNumber)],
-                }
-            else:
+            if not record.exam_count > 1:
                 return {
                     "name": ("Exam"),
                     "view_type": "form",
                     "view_mode": "form",
                     "res_model": "exam.details",
                     "type": "ir.actions.act_window",
-                    "res_id": record.exams.id,
+                    "res_id": record.exam_ids.id,
                 }
+            return {
+                "name": ("Exam details"),
+                "view_mode": "tree,form",
+                "res_model": "exam.details",
+                "type": "ir.actions.act_window",
+                "domain": [("student_names", "=", self.rollNumber)],
+            }
 
-    # count the number of results
     def _compute_result_count(self):
         for record in self:
             record.result_count = self.env["result.details"].search_count(
@@ -204,21 +190,19 @@ class StudentDetails(models.Model):
 
     def result_button(self):
         for record in self:
-            if record.result_count > 1:
-                # print(record.exam_count)
-                return {
-                    "name": ("Results"),
-                    "view_mode": "tree,form",
-                    "res_model": "result.details",
-                    "type": "ir.actions.act_window",
-                    "domain": [("student_name", "=", self.id)],
-                }
-            else:
+            if not record.result_count > 1:
                 return {
                     "name": ("Result"),
                     "view_type": "form",
                     "view_mode": "form",
                     "res_model": "result.details",
                     "type": "ir.actions.act_window",
-                    "res_id": record.results.id,
+                    "res_id": record.result_ids.id,
                 }
+            return {
+                "name": ("Results"),
+                "view_mode": "tree,form",
+                "res_model": "result.details",
+                "type": "ir.actions.act_window",
+                "domain": [("student_name", "=", self.id)],
+            }

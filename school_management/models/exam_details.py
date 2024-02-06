@@ -12,22 +12,21 @@ class ExamDetails(models.Model):
             ("second term examination", "Second Term Examination"),
             ("final term examination", "Final Term Examination"),
         ],
-        "Exam",
+        string="Exam",
         help="Select exam type",
     )
-    subject_name = fields.Many2one("subject.details", string="Subjects")
-    class_name = fields.Many2many("class.details", string="Class Name")
-    student_names = fields.Many2many(
-        "student.details",
+    subject_name_id = fields.Many2one(comodel_name="subject.details", string="Subjects")
+    class_name_ids = fields.Many2many(comodel_name="class.details", string="Class Name")
+    student_name_ids = fields.Many2many(
+        comodel_name="student.details",
         string="Student Details",
-        domain="[('student_class','in',class_name)]",
+        domain="[('student_class_id','in',class_name_ids)]",
     )
-    dateTime = fields.Datetime("Date and Time")
-    total_marks = fields.Integer("Total marks")
-    passing_marks = fields.Integer("Passing marks")
-    exam_number = fields.Char("Exam Number", readonly=True, default="New")
+    dateTime = fields.Datetime(string="Date and Time")
+    total_marks = fields.Integer(string="Total marks")
+    passing_marks = fields.Integer(string="Passing marks")
+    exam_number = fields.Char(string="Exam Number", readonly=True, default="New")
 
-    # generate unique sequence number for every new exams record
     @api.model
     def create(self, records):
         records["exam_number"] = self.env["ir.sequence"].next_by_code("exam.details")
@@ -40,7 +39,7 @@ class ExamDetails(models.Model):
                 (
                     record.id,
                     "[%s] - [%s]"
-                    % (record.exam_name, record.subject_name.subject_name),
+                    % (record.exam_name, record.subject_name_id.subject_name),
                 )
             )
         return result

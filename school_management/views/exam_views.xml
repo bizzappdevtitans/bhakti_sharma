@@ -2,14 +2,14 @@
 <odoo>
 
     <!-- Action -->
-    <record id="action_exam_details_menu" model="ir.actions.act_window">
+    <record id="school_management_action_exam_details_menu" model="ir.actions.act_window">
         <field name="name">Exam Details</field>
         <field name="res_model">exam.details</field>
         <field name="view_mode">tree,form,search</field>
     </record>
 
     <!-- Form view -->
-    <record id="view_exam_details_form" model="ir.ui.view">
+    <record id="school_management_exam_details_form_view" model="ir.ui.view">
         <field name="name">exam.details.form</field>
         <field name="model">exam.details</field>
         <field name="arch" type="xml">
@@ -21,13 +21,13 @@
                     <group name="group_top">
                         <group name="group_right">
                             <field name="exam_name"/>
-                            <field name="subject_name"/>
-                            <field name="student_names"  widget="many2many_tags"/>
+                            <field name="subject_name_id"/>
+                            <field name="student_name_ids"  widget="many2many_tags"/>
                             <field name="passing_marks"/>
                         </group>
                         <group name="group_left">
                              <field name="dateTime"/>
-                             <field name="class_name" widget="many2many_tags"/>
+                             <field name="class_name_ids" widget="many2many_tags"/>
                              <field name="total_marks"/>
                         </group>
                     </group>
@@ -37,15 +37,15 @@
     </record>
 
     <!-- Tree view -->
-    <record id="view_exam_details_tree" model="ir.ui.view">
+    <record id="school_management_exam_details_tree_view" model="ir.ui.view">
         <field name="name">exam.details.tree</field>
         <field name="model">exam.details</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="exam_number"/>
                 <field name="exam_name"/>
-                <field name="subject_name"/>
-                <field name="class_name" widget="many2many_tags"/>
+                <field name="subject_name_id"/>
+                <field name="class_name_ids" widget="many2many_tags"/>
                 <field name="dateTime" widget="remaining_days"/>
                 <field name="total_marks"/>
                 <field name="passing_marks"/>
@@ -54,15 +54,15 @@
     </record>
 
     <!-- Search view -->
-    <record id="view_exam_details_search" model="ir.ui.view">
+    <record id="school_management_exam_details_search_view" model="ir.ui.view">
         <field name="name">exam.details.search</field>
         <field name="model">exam.details</field>
         <field name="arch" type="xml">
             <search>
                 <field name="exam_name"/>
-                <field name="subject_name"/>
-                <field name="class_name"/>
-                <field name="student_names"/>
+                <field name="subject_name_id"/>
+                <field name="class_name_ids"/>
+                <field name="student_name_ids"/>
                 <field name="dateTime"/>
                 <field name="total_marks"/>
                 <field name="passing_marks"/>
@@ -78,7 +78,7 @@
                 </group>
 
                 <group expand="0" string="Group By">
-                    <filter string="Class" name="class_name" context="{'group_by':'class_name'}"/>
+                    <filter string="Class" name="class_name_ids" context="{'group_by':'class_name_ids'}"/>
                 </group>
 
                 <group expand="0" string="Group By">
@@ -86,10 +86,10 @@
                 </group>
 
                 <group expand="0" string="Group By">
-                    <filter string="Subject" name="subject_name" context="{'group_by':'subject_name'}"/>
+                    <filter string="Subject" name="subject_name_id" context="{'group_by':'subject_name_id'}"/>
                 </group>
                 <searchpanel>
-                    <field name="subject_name" enable_counters="1" icon="fa-solid fa-user"/>
+                    <field name="subject_name_id" enable_counters="1" icon="fa-solid fa-user"/>
                 </searchpanel>
             </search>
         </field>

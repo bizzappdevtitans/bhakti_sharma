@@ -1,7 +1,7 @@
 {
     "name": "School App",
     "summary": """Use for School Management""",
-    "author": "bizzappdev",
+    "author": "BizzAppDev Systems Pvt. Ltd.",
     "website": "https://www.bizzappdev.com",
     "category": "Uncategorized",
     "version": "15.0.1.0.0",

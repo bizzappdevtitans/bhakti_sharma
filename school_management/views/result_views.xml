@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="action_result_details_menu" model="ir.actions.act_window">
+    <record id="school_management_action_result_details_menu" model="ir.actions.act_window">
         <field name="name">Result Details</field>
         <field name="res_model">result.details</field>
         <field name="view_mode">tree,form,search</field>
     </record>
 
      <!-- Tree view -->
-    <record id="view_result_details_tree" model="ir.ui.view">
+    <record id="school_management_result_details_tree_view" model="ir.ui.view">
         <field name="name">result.details.tree</field>
         <field name="model">result.details</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="sequence_number"/>
                 <field name="result_name"/>
-                <field name="class_name"/>
-                <field name="student_name" decoration-success="grade=='A+'" decoration-danger="grade=='Fail'" decoration-primary="grade=='B+'"/>
+                <field name="class_name_id"/>
+                <field name="student_name_id" decoration-success="grade=='A+'" decoration-danger="grade=='Fail'" decoration-primary="grade=='B+'"/>
                 <field name="total_marks"/>
                 <field name="obtained_marks" decoration-bf='1'/>
                 <field name="percentage" widget="percentpie"/>
@@ -26,7 +26,7 @@
     </record>
 
     <!-- Form view -->
-    <record id="view_result_details_form" model="ir.ui.view">
+    <record id="school_management_result_details_form_view" model="ir.ui.view">
         <field name="name">result.details.form</field>
         <field name="model">result.details</field>
         <field name="arch" type="xml">
@@ -38,8 +38,8 @@
                     <group name="group_top">
                         <group name="group_left">
                             <field name="result_name"  attrs="{'required':1}"/>
-                            <field name="class_name"/>
-                             <field name="student_name"/>
+                            <field name="class_name_id"/>
+                             <field name="student_name_id"/>
                         </group>
                         <group name="group_right">
                             <field name="total_marks"/>
@@ -54,21 +54,21 @@
     </record>
 
    <!--Search view -->
- <record id="view_result_details_search" model="ir.ui.view">
+ <record id="school_management_result_details_search_view" model="ir.ui.view">
         <field name="name">result.details.search</field>
         <field name="model">result.details</field>
         <field name="arch" type="xml">
             <search>
                 <field name="result_name"/>
-                <field name="class_name"/>
-                <field name="student_name"/>
+                <field name="class_name_id"/>
+                <field name="student_name_id"/>
                 <field name="total_marks"/>
                 <field name="obtained_marks"/>
                 <field name="percentage"/>
                 <field name="grade"/>
 
                 <group expand="0" string="Group By">
-                    <filter string="Class Name" name="class_name" context="{'group_by': 'class_name'}"/>
+                    <filter string="Class Name" name="class_name_id" context="{'group_by': 'class_name_id'}"/>
                 </group>
             </search>
         </field>

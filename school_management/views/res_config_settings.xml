@@ -46,7 +46,7 @@
         </field>
     </record>
 
-    <record id="action_school_config_settings" model="ir.actions.act_window">
+    <record id="school_management_action_school_config_settings" model="ir.actions.act_window">
         <field name="name">Settings</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.config.settings</field>

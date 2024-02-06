@@ -6,17 +6,17 @@ class ResultDetails(models.Model):
     _description = "Information about results"
     _rec_name = "result_name"
 
-    result_name = fields.Char("Result name")
-    class_name = fields.Many2one("class.details", "Class name")
-    student_name = fields.Many2one("student.details", "Student name")
-    total_marks = fields.Integer("Total marks", default=1)
-    obtained_marks = fields.Integer("Obtained marks")
-    percentage = fields.Float("Percentage", compute="_compute_percentage")
+    result_name = fields.Char(string="Result name")
+    class_name_id = fields.Many2one(comodel_name="class.details", string="Class name")
+    student_name_id = fields.Many2one(comodel_name="student.details", string="Student name")
+    total_marks = fields.Integer(string="Total marks", default=1)
+    obtained_marks = fields.Integer(string="Obtained marks")
+    percentage = fields.Float(string="Percentage", compute="_compute_percentage")
     grade = fields.Char(
-        "Grade",
+        string="Grade",
         compute="_compute_grade",
     )
-    sequence_number = fields.Char("Number", required=True, readonly=True, default="New")
+    sequence_number = fields.Char(string="Number", required=True, readonly=True, default="New")
 
     @api.model
     def create(self, vals):
@@ -48,15 +48,15 @@ class ResultDetails(models.Model):
             args += [
                 "|",
                 (self._rec_name, operator, name),
-                ("class_name", operator, name),
+                ("class_name_id", operator, name),
             ]
         return self._search(args, limit=limit, access_rights_uid=name_get_uid)
 
-    @api.onchange("class_name")
-    def _change_student_name(self):
+    @api.onchange("class_name_id")
+    def _change_student_name_id(self):
         result = {}
         result["domain"] = {
-            "student_name": [("student_class", "=", self.class_name.id)]
+            "student_name_id": [("student_class", "=", self.class_name_id.id)]
         }
         return result
 

@@ -2,14 +2,14 @@
 <odoo>
 
     <!-- Action-->
-    <record id="action_class_details_menu" model="ir.actions.act_window">
+    <record id="school_management_action_class_details_menu" model="ir.actions.act_window">
         <field name="name">Class Details</field>
         <field name="res_model">class.details</field>
         <field name="view_mode">tree,form,search</field>
     </record>
 
     <!-- Form view -->
-    <record id="view_class_details_form" model="ir.ui.view">
+    <record id="school_management_class_details_form_view" model="ir.ui.view">
             <field name="name">class.details.form</field>
             <field name="model">class.details</field>
             <field name="arch" type="xml">
@@ -51,8 +51,8 @@
                         <group name="group_top">
                             <group name="group_left">
                                 <field name="class_name"/>
-                                <field name="class_teacher"/>
-                                <field name="facilities" widget="many2many_tags"/>
+                                <field name="teacher_id"/>
+                                <field name="facility_ids" widget="many2many_tags"/>
                             </group>
                             <group name="group_right">
                                 <field name="capacity"/>
@@ -61,7 +61,7 @@
                         </group>
                         <notebook>
                                 <page string="Add Student Data">
-                                    <field name="students">
+                                    <field name="student_ids">
                                         <tree>
                                             <field name="student_name"/>
                                             <field name="rollNumber"/>
@@ -69,42 +69,42 @@
                                     </field>
                                 </page>
                                 <page string="Add Subject Data">
-                                    <field name="subject">
+                                    <field name="subject_ids">
                                         <tree>
                                             <field name="subject_name"/>
                                         </tree>
                                     </field>
                                 </page>
                                  <page string="Add Attendance Data">
-                                    <field name="attendance">
+                                    <field name="attendance_ids">
                                         <tree>
                                             <field name="sheet_name"/>
                                             <field name="attendance_date"/>
                                             <field name="status"/>
                                             <field name="reason"/>
-                                            <field name="student"/>
+                                            <field name="student_ids"/>
                                             <field name="startTime"/>
                                             <field name="endTime"/>
                                             <field name="notes"/>
                                         </tree>
                                     </field>
                                 </page>
-                            </notebook>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
     </record>
 
     <!-- Tree View -->
-     <record id="view_class_details_tree" model="ir.ui.view">
+     <record id="school_management_class_details_tree_view" model="ir.ui.view">
         <field name="name">class.details.tree</field>
         <field name="model">class.details</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="sequence_number"/>
                 <field name="class_name"/>
-                <field name="class_teacher"/>
-                <field name="facilities"  widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="teacher_id"/>
+                <field name="facility_ids"  widget="many2many_tags" options="{'color_field': 'color'}"/>
                 <field name="capacity"/>
                 <field name="room_number"/>
             </tree>
@@ -112,26 +112,26 @@
     </record>
 
     <!-- Search view -->
-    <record id="view_class_details_search" model="ir.ui.view">
+    <record id="school_management_class_details_search_view" model="ir.ui.view">
         <field name="name">class.details.search</field>
         <field name="model">class.details</field>
         <field name="arch" type="xml">
             <search>
                 <field name="class_name"/>
-                <field name="class_teacher"/>
-                <field name="facilities"/>
+                <field name="teacher_id"/>
+                <field name="facility_ids"/>
                 <field name="capacity"/>
-                <field name="students"/>
+                <field name="student_ids"/>
                 <field name="room_number"/>
 
-                <filter string="Library facilities" name="facilities" domain="[('facilities', '=', 'library')]"/>
+                <filter string="Library facilities" name="facility_ids" domain="[('facility_ids', '=', 'library')]"/>
 
                 <group expand="0" string="Group By">
                     <filter string="Class Name" name="class_name" context="{'group_by': 'class_name'}"/>
                 </group>
 
                 <group expand="0" string="Group By">
-                    <filter string="Facility name" name="facilities" context="{'group_by': 'facilities'}"/>
+                    <filter string="Facility name" name="facility_ids" context="{'group_by': 'facility_ids'}"/>
                 </group>
             </search>
         </field>

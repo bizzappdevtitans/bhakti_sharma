@@ -2,14 +2,14 @@
 <odoo>
 
     <!-- Action-->
-    <record id="action_attendance_details_menu" model="ir.actions.act_window">
+    <record id="school_management_action_attendance_details_menu" model="ir.actions.act_window">
         <field name="name">Attendance Details</field>
         <field name="res_model">attendance.details</field>
         <field name="view_mode">tree,form,search</field>
     </record>
 
     <!-- Form view -->
-    <record id="view_attendance_details_form" model="ir.ui.view">
+    <record id="school_management_attendance_details_form_view" model="ir.ui.view">
             <field name="name">attendance.details.form</field>
             <field name="model">attendance.details</field>
             <field name="arch" type="xml">
@@ -30,7 +30,7 @@
                                 <field name="reason"/>
                             </group>
                             <group name="group_right">
-                                <field name="class_name"/>
+                                <field name="class_name_id"/>
                                 <field name="startTime"/>
                                 <field name="endTime"/>
                                 <field name="notes"/>
@@ -38,7 +38,7 @@
                         </group>
                         <notebook>
                              <page string="Add Students">
-                                <field name="student" >
+                                <field name="student_ids" >
                                     <tree>
                                         <field name="rollNumber"/>
                                         <field name="student_name"/>
@@ -52,7 +52,7 @@
     </record>
 
     <!-- Tree view -->
-    <record id="view_attendance_details_tree" model="ir.ui.view">
+    <record id="school_management_attendance_details_tree_view" model="ir.ui.view">
             <field name="name">attendance.details.tree</field>
             <field name="model">attendance.details</field>
             <field name="arch" type="xml">
@@ -60,9 +60,9 @@
                     <field name="sequence_number"/>
                     <field name="sheet_name"/>
                     <field name="attendance_date"/>
-                    <field name="class_name"/>
+                    <field name="class_name_id"/>
                     <field name="status"/>
-                    <field name="student"/>
+                    <field name="student_ids"/>
                     <field name="startTime"/>
                     <field name="endTime"/>
                     <field name="reason"/>
@@ -73,17 +73,17 @@
     </record>
 
     <!-- Search view -->
-    <record id="view_attendance_details_search" model="ir.ui.view">
+    <record id="school_management_attendance_details_search_view" model="ir.ui.view">
         <field name="name">attendance.details.search</field>
         <field name="model">attendance.details</field>
         <field name="arch" type="xml">
             <search>
                 <field name="sheet_name"/>
                 <field name="attendance_date"/>
-                <field name="class_name"/>
+                <field name="class_name_id"/>
                 <field name="status"/>
                 <field name="reason"/>
-                <field name="student"/>
+                <field name="student_ids"/>
                 <field name="startTime"/>
                 <field name="endTime"/>
                 <field name="notes"/>
@@ -111,7 +111,7 @@
                 </group>
 
                 <group expand="0" string="Group By">
-                    <field string="Class Name" name="class_name" context="{'group_by':'class_name'}"/>
+                    <field string="Class Name" name="class_name_id" context="{'group_by':'class_name_id'}"/>
                 </group>
 
             </search>

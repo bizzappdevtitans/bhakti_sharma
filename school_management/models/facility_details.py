@@ -7,15 +7,14 @@ class FacilityDetails(models.Model):
     _description = "Facility Details"
     _rec_name = "facility_name"
 
-    facility_name = fields.Char("Facility name")
-    color = fields.Integer("Color")
+    facility_name = fields.Char(string="Facility name")
+    color = fields.Integer(string="Color")
 
-    classes = fields.Many2many("class.details")
+    class_ids = fields.Many2many(comodel_name="class.details")
     class_count = fields.Integer(compute="_compute_class_count")
 
-    sequence_number = fields.Char("Number", required=True, readonly=True, default="New")
+    sequence_number = fields.Char(string="Number", required=True, readonly=True, default="New")
 
-    # generate unique number for facility record
     @api.model
     def create(self, vals):
         if vals.get("sequence_number", "New") == "New":
@@ -43,18 +42,21 @@ class FacilityDetails(models.Model):
     ):
         args = list(args or [])
         if not (name == "" and operator == "ilike"):
-            args += ["|", (self._rec_name, operator, name), ("classes", operator, name)]
+            args += [
+                "|",
+                (self._rec_name, operator, name),
+                ("class_ids", operator, name),
+            ]
         return self._search(args, limit=limit, access_rights_uid=name_get_uid)
 
     def unlink(self):
-        if self.classes:
+        if self.class_ids:
             raise UserError(
                 "You can not delete the record which already have class details."
             )
         else:
             return super(FacilityDetails, self).unlink()
 
-    # Count the number of classes
     def _compute_class_count(self):
         for record in self:
             record.class_count = self.env["class.details"].search_count(
@@ -63,19 +65,18 @@ class FacilityDetails(models.Model):
 
     def class_button(self):
         for record in self:
-            if record.class_count > 1:
-                return {
-                    "name": "Classes with same facility",
-                    "view_mode": "tree,form",
-                    "res_model": "class.details",
-                    "type": "ir.actions.act_window",
-                    "domain": [("facilities", "=", self.facility_name)],
-                }
-            else:
+            if not record.class_count > 1:
                 return {
                     "name": "Classe with same facility",
                     "view_mode": "form",
                     "res_model": "class.details",
                     "type": "ir.actions.act_window",
-                    "res_id": record.classes.id,
+                    "res_id": record.class_ids.id,
                 }
+            return {
+                "name": "Classes with same facility",
+                "view_mode": "tree,form",
+                "res_model": "class.details",
+                "type": "ir.actions.act_window",
+                "domain": [("facilities", "=", self.facility_name)],
+            }

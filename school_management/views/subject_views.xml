@@ -2,14 +2,14 @@
 <odoo>
 
     <!-- Action -->
-    <record id="action_subject_details_menu" model="ir.actions.act_window">
+    <record id="school_management_action_subject_details_menu" model="ir.actions.act_window">
         <field name="name">Subject Details</field>
         <field name="res_model">subject.details</field>
         <field name="view_mode">tree,form,search</field>
     </record>
 
     <!-- Form view -->
-     <record id="view_subject_details_form" model="ir.ui.view">
+     <record id="school_management_subject_details_form_view" model="ir.ui.view">
             <field name="name">subject.details.form</field>
             <field name="model">subject.details</field>
             <field name="arch" type="xml">
@@ -22,8 +22,8 @@
                         <group name="group_top">
                             <group name="group_left">
                                 <field name="subject_name" attrs="{'required':1}"/>
-                                <field name="class_name"/>
-                                <field name="teacher_name"/>
+                                <field name="class_name_id"/>
+                                <field name="teacher_name_id"/>
                             </group>
                             <group name="group_right">
                                 <field name="description"/>
@@ -33,11 +33,11 @@
                         </group>
                             <notebook>
                                 <page string="Add Exam Data">
-                                    <field name="exam_name">
+                                    <field name="exam_name_ids">
                                         <tree>
                                             <field name="exam_name"/>
-                                            <field name="subject_name"/>
-                                            <field name="class_name" widget="many2many_tags"/>
+                                            <field name="subject_name_id"/>
+                                            <field name="class_name_ids" widget="many2many_tags"/>
                                             <field name="dateTime"/>
                                             <field name="total_marks"/>
                                             <field name="passing_marks"/>
@@ -51,15 +51,15 @@
     </record>
 
     <!-- Tree view -->
-    <record id="view_subject_details_tree" model="ir.ui.view">
+    <record id="school_management_subject_details_tree_view" model="ir.ui.view">
         <field name="name">subject.details.tree</field>
         <field name="model">subject.details</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="sequence_number"/>
                 <field name="subject_name" decoration-bf="1"/>
-                <field name="class_name"/>
-                <field name="teacher_name"/>
+                <field name="class_name_id"/>
+                <field name="teacher_name_id"/>
                 <field name="description"/>
                 <field name="textBooks"/>
                 <field name="url" widget="url"/>
@@ -68,20 +68,20 @@
     </record>
 
     <!-- Search view -->
-    <record id="view_subject_details_search" model="ir.ui.view">
+    <record id="school_management_subject_details_search_view" model="ir.ui.view">
         <field name="name">subject.details.search</field>
         <field name="model">subject.details</field>
         <field name="arch" type="xml">
             <search>
                 <field name="subject_name" decoration-bf="1"/>
-                <field name="class_name"/>
-                <field name="teacher_name"/>
+                <field name="class_name_id"/>
+                <field name="teacher_name_id"/>
                 <field name="description"/>
                 <field name="textBooks"/>
                 <field name="url" widget="url"/>
 
                 <group string="Group By">
-                    <field string="Class Name" name="class_name" context="{'group_by':'class_name'}"/>
+                    <field string="Class Name" name="class_name_id" context="{'group_by':'class_name_id'}"/>
                 </group>
 
                 <group string="Group By">
@@ -89,7 +89,7 @@
                 </group>
 
                 <group string="Group By">
-                    <field string="Teacher Name" name="teacher_name" context="{'group_by':'teacher_name'}"/>
+                    <field string="Teacher Name" name="teacher_name_id" context="{'group_by':'teacher_name_id'}"/>
                 </group>
 
             </search>

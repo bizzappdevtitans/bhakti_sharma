@@ -7,15 +7,14 @@ class SubjectDetails(models.Model):
     _rec_name = "subject_name"
 
     subject_name = fields.Char(string="Subject name")
-    class_name = fields.Many2one("class.details", "Class Name")
-    description = fields.Html("Subject Description", help="Information about subjects ")
-    teacher_name = fields.Many2one("teacher.details", "Teacher Details")
-    textBooks = fields.Html("Textbooks", help="Information Related textbooks")
-    url = fields.Text("Url to refer", help="url to understand subjects chapter")
-    sequence_number = fields.Char("Number", required=True, readonly=True, default="New")
-    exam_name = fields.One2many("exam.details", "subject_name", "Exam data")
+    class_name_id = fields.Many2one(comodel_name="class.details", string="Class Name")
+    description = fields.Html(string="Subject Description", help="Information about subjects ")
+    teacher_name_id = fields.Many2one(comodel_name="teacher.details", string="Teacher Details")
+    textBooks = fields.Html(string="Textbooks", help="Information Related textbooks")
+    url = fields.Text(string="Url to refer", help="url to understand subjects chapter")
+    sequence_number = fields.Char(string="Number", required=True, readonly=True, default="New")
+    exam_name_ids = fields.One2many(comodel_name="exam.details", inverse_name="subject_name_id", string="Exam data")
 
-    # generate unique number for Subjects record
     @api.model
     def create(self, vals):
         if vals.get("sequence_number", "New") == "New":
@@ -46,12 +45,12 @@ class SubjectDetails(models.Model):
             args += [
                 "|",
                 (self._rec_name, operator, name),
-                ("class_name", operator, name),
+                ("class_name_id", operator, name),
             ]
         return self._search(args, limit=limit, access_rights_uid=name_get_uid)
 
-    def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
-        domain = [("class_name", "=", "10TH-A")]
-        return super(SubjectDetails, self).search_read(
-            domain, fields, offset, limit, order
-        )
+    # def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
+    #     domain = [("class_name_id", "=", "10TH-A")]
+    #     return super(SubjectDetails, self).search_read(
+    #         domain, fields, offset, limit, order
+    #     )

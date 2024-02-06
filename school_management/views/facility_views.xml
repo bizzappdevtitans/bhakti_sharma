@@ -2,14 +2,14 @@
 <odoo>
 
     <!-- Action -->
-    <record id="action_facility_details_menu" model="ir.actions.act_window">
+    <record id="school_management_action_facility_details_menu" model="ir.actions.act_window">
         <field name="name">Facility Details</field>
         <field name="res_model">facility.details</field>
         <field name="view_mode">tree,form,search</field>
     </record>
 
     <!-- Form view -->
-    <record id="view_facility_details_form" model="ir.ui.view">
+    <record id="school_management_facility_details_form_view" model="ir.ui.view">
         <field name="name">facility.details.form</field>
         <field name="model">facility.details</field>
         <field name="arch" type="xml">
@@ -29,7 +29,7 @@
                     <group name="group_top">
                         <group name="group_left">
                             <field name="facility_name" attrs="{'required':1}"/>
-                            <field name="classes" widget="many2many_tags"/>
+                            <field name="class_ids" widget="many2many_tags"/>
                         </group>
                         <group name="group_right">
                             <field name="color" widget="color_picker" attrs="{'required':1}"/>
@@ -41,31 +41,31 @@
     </record>
 
     <!-- Tree view -->
-    <record id="view_facility_details_tree" model="ir.ui.view">
+    <record id="school_management_facility_details_tree_view" model="ir.ui.view">
         <field name="name">facility.details.tree</field>
         <field name="model">facility.details</field>
         <field name="arch" type="xml">
             <tree>
                 <field name="sequence_number"/>
                 <field name="facility_name" decoration-bf="1"/>
-                <field name="classes" widget="many2many_tags"/>
+                <field name="class_ids" widget="many2many_tags"/>
                 <field name="color" widget="color_picker"/>
             </tree>
         </field>
     </record>
 
     <!-- Search view -->
-    <record id="view_facility_details_search" model="ir.ui.view">
+    <record id="school_management_facility_details_search_view" model="ir.ui.view">
         <field name="name">facility.details.search</field>
         <field name="model">facility.details</field>
         <field name="arch" type="xml">
             <search>
                 <field name="facility_name"/>
                 <field name="color" />
-                <field name="classes"/>
+                <field name="class_ids"/>
 
                  <group expand="0" string="Group By">
-                    <filter string="Class Name" name="classes" context="{'group_by': 'classes'}"/>
+                    <filter string="Class Name" name="class_ids" context="{'group_by': 'class_ids'}"/>
                 </group>
 
             </search>

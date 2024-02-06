@@ -18,5 +18,5 @@ class ResConfigSettings(models.TransientModel):
     )
 
     available_rooms = fields.Char(
-        string="Available Room", config_parameter="class.available_rooms",default=0
+        string="Available Room", config_parameter="class.available_rooms", default=0
     )

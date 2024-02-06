@@ -10,7 +10,7 @@
     <data noupdate="0">
         <record id="available_rooms" model="ir.config_parameter">
             <field name="key">available_rooms</field>
-            <field name="value">301</field>
+            <field name="value">301,201,302</field>
         </record>
     </data>
 

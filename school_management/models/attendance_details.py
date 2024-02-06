@@ -7,44 +7,36 @@ class AttendanceDetails(models.Model):
     _description = "Information about daily attendance"
     _rec_name = "sheet_name"
 
-    sheet_name = fields.Char("Sheet Name")
-    attendance_date = fields.Date("Date", help="Enter today's attendance date")
-    student = fields.Many2many("student.details", string="Student")
+    sheet_name = fields.Char(string="Sheet Name")
+    attendance_date = fields.Date(string="Date", help="Enter today's attendance date")
+    student_ids = fields.Many2many(comodel_name="student.details", string="Student")
     status = fields.Selection([("present", "Present"), ("absent", "Absent")])
-    reason = fields.Text("Absent Reason")
-    startTime = fields.Datetime("Start Time")
-    endTime = fields.Datetime("End Time")
-    notes = fields.Html("Notes")
-    class_name = fields.Many2one("class.details", "Class")
+    reason = fields.Text(string="Absent Reason")
+    startTime = fields.Datetime(string="Start Time")
+    endTime = fields.Datetime(string="End Time")
+    notes = fields.Html(string="Notes")
+    class_name_id = fields.Many2one(comodel_name="class.details", string="Class")
     state = fields.Selection(
         [("draft", "Draft"), ("in_progress", "In Progress"), ("done", "Done")],
         string="State",
         default="in_progress",
         required=True,
     )
-    sequence_number = fields.Char("Number", required=True, readonly=True, default="New")
+    sequence_number = fields.Char(
+        string="Number", required=True, readonly=True, default="New"
+    )
 
-    # validation on startTime and endTime
     @api.constrains("startTime")
     def _validate_startTime(self):
-        for record in self:
-            if record.startTime > record.endTime:
-                raise ValidationError("Please check start time and end time")
+        if self.startTime > self.endTime:
+            raise ValidationError("Please check start time and end time")
 
-    # By selecing class name all the records of students of that particular class we get
-    @api.onchange("class_name")
-    def _compute_student(self):
-        for record in self:
-            record.student = record.class_name.students.filtered(
-                lambda name: name.student_class == record.class_name
-            )
-            print(
-                record.class_name.students.filtered(
-                    lambda name: name.student_class == record.class_name
-                )
-            )
+    @api.onchange("class_name_id")
+    def _validate_student(self):
+        self.student_ids = self.class_name_id.student_ids.filtered(
+            lambda name: name.student_class == self.class_name_id
+        )
 
-    # generate unique number for attendance record
     @api.model
     def create(self, vals):
         if vals.get("sequence_number", "New") == "New":
@@ -55,12 +47,10 @@ class AttendanceDetails(models.Model):
             return super(AttendanceDetails, self).create(vals)
 
     @api.onchange("status")
-    def _compute_status(self):
-        for record in self:
-            if record.status == "present":
-                print(record.write({"reason": "None"}))
-            else:
-                record.write({"reason": ""})
+    def _validate_status(self):
+        if not self.status == "present":
+            self.write({"reason": ""})
+        self.write({"reason": "None"})
 
     def write(self, vals):
         if "sheet_name" in vals and vals["sheet_name"]:
@@ -83,7 +73,7 @@ class AttendanceDetails(models.Model):
             args += [
                 "|",
                 (self._rec_name, operator, name),
-                ("class_name", operator, name),
+                ("class_name_id", operator, name),
             ]
         return self._search(args, limit=limit, access_rights_uid=name_get_uid)
 
@@ -99,11 +89,9 @@ class AttendanceDetails(models.Model):
             domain, fields, offset, limit, order
         )
 
-    # restrict the user to delete the record which have class data
     def unlink(self):
-        if self.class_name:
-            raise UserError(
-                "You can not delete the record which already have class details."
-            )
-        else:
+        if not self.class_name_id:
             return super(AttendanceDetails, self).unlink()
+        raise UserError(
+            "You can not delete the record which already have class details."
+        )
