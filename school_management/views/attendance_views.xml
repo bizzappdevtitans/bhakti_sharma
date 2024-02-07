@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Action-->
+    <record id="action_attendance_details_menu" model="ir.actions.act_window">
+        <field name="name">Attendance Details</field>
+        <field name="res_model">attendance.details</field>
+        <field name="view_mode">tree,form,search</field>
+    </record>
+
+    <!-- Form view -->
+    <record id="view_attendance_details_form" model="ir.ui.view">
+            <field name="name">attendance.details.form</field>
+            <field name="model">attendance.details</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <field name="state" widget="statusbar" nolabel="1" options="{'clickable':'1'}" statusbar_visible="draft,in_progress,done"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h2>Attendance Details</h2>
+                        </div>
+                        <widget name="web_ribbon" title="Archived" bg_color="bg-warning" attrs="{'invisible':[('state','=','in_progress')],'invisible':[('state', 'in', ['in_progress', 'done'])]}"/>
+                        <group name="group_top">
+                            <group name="group_left">
+                                <field name="sheet_name" attrs="{'required':1}"/>
+                                <field name="attendance_date"/>
+                                <field name="status" widget="radio"/>
+                                <field name="reason"/>
+                            </group>
+                            <group name="group_right">
+                                <field name="class_name"/>
+                                <field name="startTime"/>
+                                <field name="endTime"/>
+                                <field name="notes"/>
+                            </group>
+                        </group>
+                        <notebook>
+                             <page string="Add Students">
+                                <field name="student" >
+                                    <tree>
+                                        <field name="rollNumber"/>
+                                        <field name="student_name"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+    </record>
+
+    <!-- Tree view -->
+    <record id="view_attendance_details_tree" model="ir.ui.view">
+            <field name="name">attendance.details.tree</field>
+            <field name="model">attendance.details</field>
+            <field name="arch" type="xml">
+                <tree decoration-danger="status=='absent'" decoration-success="status=='present'">
+                    <field name="sequence_number"/>
+                    <field name="sheet_name"/>
+                    <field name="attendance_date"/>
+                    <field name="class_name"/>
+                    <field name="status"/>
+                    <field name="student"/>
+                    <field name="startTime"/>
+                    <field name="endTime"/>
+                    <field name="reason"/>
+                    <field name="notes"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+    </record>
+
+    <!-- Search view -->
+    <record id="view_attendance_details_search" model="ir.ui.view">
+        <field name="name">attendance.details.search</field>
+        <field name="model">attendance.details</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="sheet_name"/>
+                <field name="attendance_date"/>
+                <field name="class_name"/>
+                <field name="status"/>
+                <field name="reason"/>
+                <field name="student"/>
+                <field name="startTime"/>
+                <field name="endTime"/>
+                <field name="notes"/>
+
+                <filter string="Present" name="status" domain="[('status', '=', 'present')]"/>
+                <filter string="Absent" name="status" domain="[('status', '=', 'absent')]"/>
+                <filter string="In Progress data" name="state" domain="[('state', '=', 'in_progress')]"/>
+                <filter string="Draft data" name="state" domain="[('state', '=', 'draft')]"/>
+                <filter string="Sheet Filled" name="state" domain="[('state', '=', 'done')]"/>
+
+                <group expand="0" string="Group By">
+                    <filter string="Status Wise" name="status" context="{'group_by': 'status'}"/>
+                </group>
+
+                <group expand="0" string="Group By">
+                    <filter string="Attendance Date" name="attendance_date" context="{'group_by': 'attendance_date'}"/>
+                </group>
+
+                <group expand="0" string="Group By">
+                    <filter string="State" name="state" context="{'group_by': 'state'}"/>
+                </group>
+
+                <group expand="0" string="Group By">
+                    <filter string="Date" name="attendance_date" context="{'group_by':'attendance_date'}"/>
+                </group>
+
+                <group expand="0" string="Group By">
+                    <field string="Class Name" name="class_name" context="{'group_by':'class_name'}"/>
+                </group>
+
+            </search>
+        </field>
+    </record>
+
+</odoo>

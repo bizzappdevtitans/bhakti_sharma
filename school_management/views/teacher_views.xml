@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Action -->
+    <record id="action_teacher_details_menu" model="ir.actions.act_window">
+        <field name="name">Teacher Details</field>
+        <field name="res_model">teacher.details</field>
+        <field name="view_mode">tree,form,search</field>
+    </record>
+
+    <!-- Form view -->
+    <record id="view_teacher_details_form" model="ir.ui.view">
+        <field name="name">teacher.details.form</field>
+        <field name="model">teacher.details</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_button_box">
+                        <button class=" oe_stat_button" name="subject_button" type="object" icon="fa-book" attrs="{'invisible':[('subject_count','==',0)]}">
+                        <span>
+                            <field name="subject_count" class="o_stat_value"/>
+                            <span class="o_stat_text">Total subjects</span>
+                        </span>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h2>Teacher Details</h2>
+                    </div>
+                    <group name="group_top">
+                        <group name="group_left">
+                            <field name="teacher_name"/>
+                            <field name="gender"/>
+                            <field name="dateOfBirth"/>
+                            <field name="age"/>
+                            <field name="phone_number"  attrs="{'required':1}"/>
+                        </group>
+                        <group name="group_right">
+                            <field name="address" widget="html" options="{'resizable':true}" />
+                            <field name="email"/>
+                            <button name="capitalize_name" string="Capitalize Name" type="object" class="oe_highlight" confirm="Are you sure to Capitalize the name"/>
+                        </group>
+                    </group>
+                        <notebook>
+                                <page string="Add Class Data">
+                                    <field name="assign_class">
+                                        <tree>
+                                            <field name="class_name"/>
+                                            <field name="room_number"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                                <page string="Add Subject Data">
+                                    <field name="subject_data">
+                                        <tree editable="bottom">
+                                            <field name="subject_name"/>
+                                            <field name="class_name"/>
+                                            <field name="description"/>
+                                            <field name="textBooks"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                        </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree view -->
+    <record id="view_teacher_details_tree" model="ir.ui.view">
+        <field name="name">teacher.details.tree</field>
+        <field name="model">teacher.details</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence_number"/>
+                <field name="teacher_name"/>
+                <field name="gender"/>
+                <field name="dateOfBirth" widget="date"/>
+                <field name="age"/>
+                <field name="address" />
+                <field name="email"  widget="email"/>
+                <field name="phone_number" widget="phone"/>
+                <field name="assign_class"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search view -->
+    <record id="view_teacher_details_search" model="ir.ui.view">
+        <field name="name">teacher.details.search</field>
+        <field name="model">teacher.details</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="teacher_name"/>
+                <field name="gender"/>
+                <field name="dateOfBirth" />
+                <field name="age"/>
+                <field name="address" />
+                <field name="email"/>
+                <field name="phone_number" />
+                <field name="assign_class"/>
+
+                <filter string="Female Teacher" name="gender" domain="[('gender', '=', 'female')]"/>
+                <filter string="Male Teacher" name="gender" domain="[('gender', '=', 'male')]"/>
+
+                <group expand="0" string="Group By">
+                    <filter string="Gender" name="gender" context="{'group_by': 'gender'}"/>
+                </group>
+                <group expand="0" string="Group By">
+                    <filter string="Date" name="dateOfBirth" context="{'group_by': 'dateOfBirth'}"/>
+                </group>
+
+            </search>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Action -->
+    <record id="action_exam_details_menu" model="ir.actions.act_window">
+        <field name="name">Exam Details</field>
+        <field name="res_model">exam.details</field>
+        <field name="view_mode">tree,form,search</field>
+    </record>
+
+    <!-- Form view -->
+    <record id="view_exam_details_form" model="ir.ui.view">
+        <field name="name">exam.details.form</field>
+        <field name="model">exam.details</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h2>Exam Details</h2>
+                    </div>
+                    <group name="group_top">
+                        <group name="group_right">
+                            <field name="exam_name"/>
+                            <field name="subject_name"/>
+                            <field name="student_names"  widget="many2many_tags"/>
+                            <field name="passing_marks"/>
+                        </group>
+                        <group name="group_left">
+                             <field name="dateTime"/>
+                             <field name="class_name" widget="many2many_tags"/>
+                             <field name="total_marks"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Tree view -->
+    <record id="view_exam_details_tree" model="ir.ui.view">
+        <field name="name">exam.details.tree</field>
+        <field name="model">exam.details</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="exam_number"/>
+                <field name="exam_name"/>
+                <field name="subject_name"/>
+                <field name="class_name" widget="many2many_tags"/>
+                <field name="dateTime" widget="remaining_days"/>
+                <field name="total_marks"/>
+                <field name="passing_marks"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search view -->
+    <record id="view_exam_details_search" model="ir.ui.view">
+        <field name="name">exam.details.search</field>
+        <field name="model">exam.details</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="exam_name"/>
+                <field name="subject_name"/>
+                <field name="class_name"/>
+                <field name="student_names"/>
+                <field name="dateTime"/>
+                <field name="total_marks"/>
+                <field name="passing_marks"/>
+
+                <filter string="First Term Examinations" name="exam_name" domain="[('exam_name', '=', 'first term examination')]"/>
+
+                <filter string="Second Term Examinations" name="exam_name" domain="[('exam_name','=','second term examination')]"/>
+
+                <filter string="Final Term Examinations" name="exam_name" domain="[('exam_name','=','final term examination')]"/>
+
+                <group expand="0" string="Group By">
+                    <filter string="Examination" name="exam_name" context="{'group_by': 'exam_name'}"/>
+                </group>
+
+                <group expand="0" string="Group By">
+                    <filter string="Class" name="class_name" context="{'group_by':'class_name'}"/>
+                </group>
+
+                <group expand="0" string="Group By">
+                    <filter string="Date Time" name="dateTime" context="{'group_by':'dateTime'}"/>
+                </group>
+
+                <group expand="0" string="Group By">
+                    <filter string="Subject" name="subject_name" context="{'group_by':'subject_name'}"/>
+                </group>
+                <searchpanel>
+                    <field name="subject_name" enable_counters="1" icon="fa-solid fa-user"/>
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+</odoo>

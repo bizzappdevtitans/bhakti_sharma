@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div
+                    class="app_settings_block"
+                    data-string="School Management"
+                    string="School"
+                    data-key="school_management"
+                >
+
+                    <h2>School Management</h2>
+                    <div
+                        class="row mt16 o_settings_container"
+                        id="school_setting_container"
+                    >
+                        <div
+                            class="col-12 col-lg-12 o_setting_box"
+                            id="school_text_block"
+                        >
+
+                            <div class="o_setting_right_pane">
+                                <div class="text-muted">
+                                    Configuration of school app
+                                </div>
+                                <div class="content-group">
+
+                                    <div class="row mt16">
+                                        <label
+                                            class="col-lg-3 o_light_label"
+                                            string="Title Page Text"
+                                            for="title_page_text"
+                                        />
+                                        <field name="title_page_text" />
+
+                                        <label
+                                            class="col-lg-3 o_light_label"
+                                            string="Allowed students Roll Number"
+                                            for="allowed_students"
+                                        />
+                                        <field name="allowed_students" />
+
+                                        <label
+                                            class="col-lg-3 o_light_label"
+                                            string="Deleted students"
+                                            for="deleted_students"
+                                        />
+                                        <div class="text-muted"><field
+                                                name="deleted_students"
+                                                attrs="{'readonly':1}"
+                                            /></div>
+                                    </div>
+                                     <div class="row mt16">
+
+                                        <label
+                                            class="col-lg-3 o_light_label"
+                                            string="Available rooms"
+                                            for="available_rooms"
+                                        />
+                                        <field name="available_rooms" />
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </xpath>
+        </field>
+    </record>
+    <record id="action_school_config_settings" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_id" ref="res_config_settings_view_form" />
+        <field name="view_mode">form</field>
+    </record>
+</odoo>

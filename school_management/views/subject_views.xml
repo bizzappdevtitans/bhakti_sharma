@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Action -->
+    <record id="action_subject_details_menu" model="ir.actions.act_window">
+        <field name="name">Subject Details</field>
+        <field name="res_model">subject.details</field>
+        <field name="view_mode">tree,form,search</field>
+    </record>
+
+    <!-- Form view -->
+     <record id="view_subject_details_form" model="ir.ui.view">
+            <field name="name">subject.details.form</field>
+            <field name="model">subject.details</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+
+                        <div class="oe_title">
+                            <h2>Subject Details</h2>
+                        </div>
+                        <group name="group_top">
+                            <group name="group_left">
+                                <field name="subject_name" attrs="{'required':1}"/>
+                                <field name="class_name"/>
+                                <field name="teacher_name"/>
+                            </group>
+                            <group name="group_right">
+                                <field name="description"/>
+                                <field name="textBooks"/>
+                                <field name="url"/>
+                            </group>
+                        </group>
+                            <notebook>
+                                <page string="Add Exam Data">
+                                    <field name="exam_name">
+                                        <tree>
+                                            <field name="exam_name"/>
+                                            <field name="subject_name"/>
+                                            <field name="class_name" widget="many2many_tags"/>
+                                            <field name="dateTime"/>
+                                            <field name="total_marks"/>
+                                            <field name="passing_marks"/>
+                                        </tree>
+                                    </field>
+                                </page>
+                            </notebook>
+                    </sheet>
+                </form>
+            </field>
+    </record>
+
+    <!-- Tree view -->
+    <record id="view_subject_details_tree" model="ir.ui.view">
+        <field name="name">subject.details.tree</field>
+        <field name="model">subject.details</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="sequence_number"/>
+                <field name="subject_name" decoration-bf="1"/>
+                <field name="class_name"/>
+                <field name="teacher_name"/>
+                <field name="description"/>
+                <field name="textBooks"/>
+                <field name="url" widget="url"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Search view -->
+    <record id="view_subject_details_search" model="ir.ui.view">
+        <field name="name">subject.details.search</field>
+        <field name="model">subject.details</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="subject_name" decoration-bf="1"/>
+                <field name="class_name"/>
+                <field name="teacher_name"/>
+                <field name="description"/>
+                <field name="textBooks"/>
+                <field name="url" widget="url"/>
+
+                <group string="Group By">
+                    <field string="Class Name" name="class_name" context="{'group_by':'class_name'}"/>
+                </group>
+
+                <group string="Group By">
+                    <field string="Subject Name" name="subject_name" context="{'group_by':'subject_name'}"/>
+                </group>
+
+                <group string="Group By">
+                    <field string="Teacher Name" name="teacher_name" context="{'group_by':'teacher_name'}"/>
+                </group>
+
+            </search>
+        </field>
+    </record>
+
+
+</odoo>
